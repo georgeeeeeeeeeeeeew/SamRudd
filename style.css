@@ -497,17 +497,72 @@ img { display: block; }
 }
 
 @media (max-width: 700px) {
-  .site-header { padding: 16px var(--pad-sm); }
-  .site-nav { gap: 16px; }
-  .hero { height: 60vw; }
-  .hero-text { left: var(--pad-sm); bottom: 32px; }
-  .hero-tagline { font-size: 20px; }
-  .home-grid { grid-template-columns: 1fr; padding: 40px var(--pad-sm); }
+  .site-header { padding: 14px 24px; }
+  .site-nav { gap: 14px; }
+
+  .hero { height: 72vw; }
+  .hero-text { left: 24px; bottom: 24px; }
+  .hero-tagline { font-size: 17px; }
+  .hero-line { width: 150px; height: 44px; }
+  .hero-btns { flex-direction: column; gap: 8px; align-items: flex-start; }
+  .btn { padding: 11px 28px; font-size: 9px; }
+
+  .stats-bar {
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    padding: 18px 24px;
+  }
+  .stats-sep { color: var(--muted); }
+
+  /* Home grid: about spans full row, then featured + exhibitions side by side */
+  .home-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding: 28px 24px 40px;
+    gap: 0;
+  }
+
+  /* About: text on left, photo on right */
+  .home-about {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    column-gap: 16px;
+    padding-right: 0;
+    margin-bottom: 28px;
+    align-items: start;
+  }
+  .artist-photo-placeholder {
+    grid-column: 2;
+    grid-row: 1 / 6;
+    width: 110px;
+    aspect-ratio: 2 / 3;
+  }
+  .home-label { grid-column: 1; }
+  .home-artist-name { grid-column: 1; font-size: 22px; }
+  .home-bio { grid-column: 1; font-size: 13px; line-height: 1.65; }
+  .read-more { grid-column: 1; }
+
+  /* Featured painting: left column */
   .home-featured { padding: 0; }
-  .home-about { padding-right: 0; margin-bottom: 32px; }
+  .home-featured img { height: 160px; }
+
+  /* Exhibitions: right column, override the 1000px full-width rule */
+  .home-exhibitions {
+    grid-column: auto;
+    border-left: 1px solid rgba(58,72,48,0.12);
+    border-top: none;
+    padding: 0 0 0 14px;
+    margin-top: 0;
+  }
+  .exhibition-item { margin-bottom: 16px; }
+  .exhibition-item strong { font-size: 11px; }
+  .exhibition-item p { font-size: 10px; }
+
   .gallery-grid { columns: 2; }
-  .stats-bar { flex-wrap: wrap; gap: 12px; padding: 16px var(--pad-sm); }
+  .stats-bar { flex-wrap: nowrap; }
   .footer-newsletter { flex-direction: column; align-items: flex-start; }
-  .collection { padding: 16px var(--pad-sm) 48px; }
-  .text-block { padding: 48px var(--pad-sm); }
+  .collection { padding: 16px 24px 48px; }
+  .text-block { padding: 48px 24px; }
 }
