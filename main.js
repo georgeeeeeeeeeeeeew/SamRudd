@@ -1,3 +1,8 @@
+// Hamburger menu
+const hamburger = document.querySelector('.hamburger');
+const siteNav = document.querySelector('.site-nav');
+hamburger.addEventListener('click', () => siteNav.classList.toggle('open'));
+
 const navLinks = document.querySelectorAll('[data-section]');
 const pages = document.querySelectorAll('.page');
 
@@ -9,6 +14,7 @@ navLinks.forEach(link => {
 
     pages.forEach(p => p.classList.remove('visible'));
     document.getElementById(target).classList.add('visible');
+    siteNav.classList.remove('open');
 
     document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
     const activeNav = document.querySelector(`.nav-link[data-section="${target}"]`);
