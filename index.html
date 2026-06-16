@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sam Rudd — British Artist</title>
+  <title>Sam Rudd — Contemporary Landscape Paintings</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garant:ital,wght@0,400;0,500;1,400&family=Jost:wght@300;400&display=swap" rel="stylesheet">
@@ -15,43 +15,117 @@
   <header class="site-header">
     <div class="header-logo">
       <img src="logo.png" alt="Sam Rudd" class="logo-img">
+      <span class="logo-subtitle">Contemporary Landscape Paintings</span>
     </div>
     <nav class="site-nav">
       <a href="#" class="nav-link active" data-section="work">Work</a>
+      <a href="#" class="nav-link" data-section="collections">Collections</a>
       <a href="#" class="nav-link" data-section="about">About</a>
+      <a href="#" class="nav-link" data-section="exhibitions">Exhibitions</a>
       <a href="#" class="nav-link" data-section="contact">Contact</a>
     </nav>
   </header>
 
-  <!-- WORK -->
+  <!-- WORK / HOME -->
   <section id="work" class="page visible">
 
     <div class="hero">
       <img src="images/through-dunes.jpeg" alt="Featured painting" class="hero-img">
       <div class="hero-text">
-        <p class="hero-tagline">Paintings inspired<br>by the British<br>landscape, wild places<br>and coastal life.</p>
+        <p class="hero-tagline">Contemporary landscape<br>paintings inspired by the<br>British landscape, wild places<br>and coastal life.</p>
         <div class="hero-line"></div>
+        <div class="hero-btns">
+          <a href="#" class="btn btn-filled" data-section="collections">View Work</a>
+          <a href="#" class="btn btn-outline" data-section="about">About Sam</a>
+        </div>
       </div>
     </div>
 
+    <div class="stats-bar">
+      <span>Represented by Portland Gallery</span>
+      <span class="stats-sep">|</span>
+      <span>Exhibited across the UK</span>
+      <span class="stats-sep">|</span>
+      <span>Private Collections Nationwide</span>
+    </div>
+
+    <div class="home-grid">
+      <div class="home-about">
+        <div class="artist-photo-placeholder">Add artist photo</div>
+        <p class="home-label">About the Artist</p>
+        <h2 class="home-artist-name">Sam Rudd</h2>
+        <p class="home-bio">Working from my studio in [location], I am constantly inspired by the changing light, weather and raw beauty of the landscapes I return to time and again.</p>
+        <a href="#" class="read-more" data-section="about">Read More &rarr;</a>
+      </div>
+      <div class="home-featured">
+        <img src="images/saint-sand-sea.jpeg" alt="Featured painting">
+      </div>
+      <div class="home-exhibitions">
+        <p class="home-label">Exhibitions</p>
+        <div class="exhibition-item">
+          <strong>[Gallery Name]</strong>
+          <p>[Exhibition Title] 2024</p>
+        </div>
+        <div class="exhibition-item">
+          <strong>[Gallery Name]</strong>
+          <p>[Exhibition Title] | Spring 2024</p>
+        </div>
+        <div class="exhibition-item">
+          <strong>[Gallery Name]</strong>
+          <p>[Exhibition Title] | 2023</p>
+        </div>
+        <a href="#" class="read-more" data-section="exhibitions">View All Exhibitions &rarr;</a>
+      </div>
+    </div>
+
+    <footer class="site-footer">
+      <div class="footer-newsletter">
+        <div class="newsletter-left">
+          <span class="newsletter-icon">&#9993;</span>
+          <div>
+            <p class="newsletter-title">Studio Updates</p>
+            <p class="newsletter-desc">Sign up to receive news about new work, exhibitions and studio updates.</p>
+          </div>
+        </div>
+        <div class="newsletter-form">
+          <input type="email" placeholder="Your email address" class="newsletter-input">
+          <button class="newsletter-btn">Sign Up</button>
+        </div>
+        <div class="footer-social">
+          <span class="social-label">Follow</span>
+          <a href="#">&#xe900;</a>
+          <a href="#" class="social-link">Ig</a>
+          <a href="#" class="social-link">Fb</a>
+          <a href="#" class="social-link">Pt</a>
+        </div>
+      </div>
+    </footer>
+
+  </section>
+
+  <!-- COLLECTIONS -->
+  <section id="collections" class="page">
     <div class="collection">
       <div class="collection-header">
-        <h2 class="collection-title">Recent Work</h2>
-        <a href="#" class="view-all">View all works &rarr;</a>
+        <h2 class="collection-title">Collections</h2>
+        <div class="filters">
+          <button class="filter-btn active" data-filter="all">All</button>
+          <button class="filter-btn" data-filter="landscape">Landscapes</button>
+          <button class="filter-btn" data-filter="coastal">Coastal</button>
+        </div>
       </div>
       <div class="gallery-grid">
-        <div class="gallery-item"><img src="images/blue-boats.jpeg" alt="Blue Boats"></div>
-        <div class="gallery-item"><img src="images/red-boat.jpeg" alt="Red Boat in the Harbour"></div>
-        <div class="gallery-item"><img src="images/church-in-sea.jpeg" alt="Church in the Sea"></div>
-        <div class="gallery-item"><img src="images/summit.jpeg" alt="Summit"></div>
-        <div class="gallery-item"><img src="images/saint-sand-sea.jpeg" alt="Saint, Sand &amp; Sea"></div>
-        <div class="gallery-item"><img src="images/through-dunes.jpeg" alt="Through the Dunes"></div>
-        <div class="gallery-item"><img src="images/boats-at-cove.jpeg" alt="Boats at the Cove"></div>
-        <div class="gallery-item"><img src="images/dsc04164.jpeg" alt="Painting"></div>
-        <div class="gallery-item"><img src="images/fields-on-hill.jpeg" alt="Fields on the Hill"></div>
+        <div class="gallery-item" data-cat="coastal"><img src="images/blue-boats.jpeg" alt="Blue Boats"></div>
+        <div class="gallery-item" data-cat="coastal"><img src="images/red-boat.jpeg" alt="Red Boat in the Harbour"></div>
+        <div class="gallery-item" data-cat="coastal"><img src="images/church-in-sea.jpeg" alt="Church in the Sea"></div>
+        <div class="gallery-item" data-cat="landscape"><img src="images/summit.jpeg" alt="Summit"></div>
+        <div class="gallery-item" data-cat="coastal"><img src="images/saint-sand-sea.jpeg" alt="Saint, Sand &amp; Sea"></div>
+        <div class="gallery-item" data-cat="landscape"><img src="images/through-dunes.jpeg" alt="Through the Dunes"></div>
+        <div class="gallery-item" data-cat="coastal"><img src="images/boats-at-cove.jpeg" alt="Boats at the Cove"></div>
+        <div class="gallery-item" data-cat="landscape"><img src="images/dsc04164.jpeg" alt="Painting"></div>
+        <div class="gallery-item" data-cat="landscape"><img src="images/fields-on-hill.jpeg" alt="Fields on the Hill"></div>
       </div>
     </div>
-
   </section>
 
   <!-- ABOUT -->
@@ -61,6 +135,18 @@
       <p>Add your bio here — a couple of paragraphs works perfectly.</p>
       <p class="muted">
         Selected exhibitions<br>
+        [Exhibition Name], [Gallery], [Year]<br>
+        [Exhibition Name], [Gallery], [Year]
+      </p>
+    </div>
+  </section>
+
+  <!-- EXHIBITIONS -->
+  <section id="exhibitions" class="page">
+    <div class="text-block">
+      <p>Exhibitions</p>
+      <p class="muted">
+        [Exhibition Name], [Gallery], [Year]<br>
         [Exhibition Name], [Gallery], [Year]<br>
         [Exhibition Name], [Gallery], [Year]
       </p>
