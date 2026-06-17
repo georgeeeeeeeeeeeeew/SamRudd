@@ -562,20 +562,21 @@ img { display: block; }
     gap: 0;
   }
 
-  /* About: text on left, photo on right */
+  /* About: text on left, photo on right — photo takes 50% */
   .home-about {
     grid-column: 1 / -1;
     display: grid;
-    grid-template-columns: 1fr auto;
+    grid-template-columns: 1fr 1fr;
     column-gap: 16px;
     padding-right: 0;
-    margin-bottom: 36px;
+    margin-bottom: 0;
     align-items: start;
+    padding-bottom: 32px;
   }
   .artist-photo-placeholder {
     grid-column: 2;
     grid-row: 1 / 6;
-    width: 110px;
+    width: 100%;
     aspect-ratio: 2 / 3;
   }
   .home-label { grid-column: 1; }
@@ -583,19 +584,22 @@ img { display: block; }
   .home-bio { grid-column: 1; font-size: 13px; line-height: 1.65; }
   .read-more { grid-column: 1; }
 
-  /* Featured painting: left column */
-  .home-featured { padding: 0; }
-  .home-featured img { height: 200px; }
+  /* Featured + exhibitions: separated from about row */
+  .home-featured {
+    padding: 28px 0 0;
+    border-top: 1px solid rgba(58,72,48,0.12);
+  }
+  .home-featured img { height: 240px; }
 
-  /* Exhibitions: right column, override the 1000px full-width rule */
+  /* Exhibitions: right column */
   .home-exhibitions {
     grid-column: auto;
-    border-left: 1px solid rgba(58,72,48,0.12);
-    border-top: none;
-    padding: 0 0 0 14px;
+    border-top: 1px solid rgba(58,72,48,0.12);
+    border-left: none;
+    padding: 28px 0 0 16px;
     margin-top: 0;
   }
-  .exhibition-item { margin-bottom: 16px; }
+  .exhibition-item { margin-bottom: 20px; }
   .exhibition-item strong { font-size: 11px; }
   .exhibition-item p { font-size: 10px; }
 
