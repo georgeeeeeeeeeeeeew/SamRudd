@@ -1,0 +1,12 @@
+{
+  "name": "Sam Rudd — Painter",
+  "short_name": "Sam Rudd",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#faf6f1",
+  "theme_color": "#faf6f1",
+  "icons": [
+    { "src": "/favicon/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/favicon/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

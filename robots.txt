@@ -1,0 +1,13 @@
+# TEMPORARY PREVIEW SETTING — blocks all search engines.
+#
+# The site currently shows placeholder artwork and invented biography/exhibition
+# text under Sam's real name, so it must not be indexed while it is a preview.
+#
+# BEFORE GOING LIVE: delete the two Disallow lines below and uncomment the
+# Allow line, so the real site can be found.
+
+User-agent: *
+Disallow: /
+# Allow: /
+
+Sitemap: https://www.samrudd.co.uk/sitemap.xml

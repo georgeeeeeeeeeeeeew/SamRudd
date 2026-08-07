@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contact — Sam Rudd</title>
+<meta name="description" content="Enquire about available paintings, commissions or exhibitions by Sam Rudd.">
+<link rel="canonical" href="https://www.samrudd.co.uk/contact.html">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Sam Rudd">
+<meta property="og:title" content="Contact — Sam Rudd">
+<meta property="og:description" content="Enquire about available paintings, commissions or exhibitions.">
+<meta property="og:url" content="https://www.samrudd.co.uk/contact.html">
+<meta property="og:image" content="https://www.samrudd.co.uk/images/site/og-default.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="en_GB">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" href="favicon/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="favicon/apple-touch-icon.png">
+<link rel="manifest" href="favicon/site.webmanifest">
+<meta name="theme-color" content="#faf6f1">
+
+<link rel="preload" href="fonts/fraunces-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="shell">
+    <a class="wordmark" href="index.html">
+      <img src="images/site/logo-signature.png" alt="Sam Rudd, painter"
+           width="371" height="163" fetchpriority="high">
+    </a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Menu">
+      <span></span><span></span>
+    </button>
+    <nav class="site-nav" id="site-nav" aria-label="Main">
+      <ul class="nav-list">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="gallery.html">Gallery</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="contact.html" aria-current="page">Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+  <section class="page-head shell">
+    <span class="eyebrow">Contact</span>
+    <h1>Get in touch</h1>
+    <p class="lede">For prices and availability, commissions, or exhibition and press enquiries. Sam reads every message and usually replies within a few days.</p>
+  </section>
+
+  <section class="shell" style="padding-bottom: var(--section-y)">
+    <div class="contact-layout">
+
+      <div class="contact-aside">
+        <dl>
+          <dt>Email</dt>
+          <dd><a class="link" href="mailto:hello@samrudd.co.uk">hello@samrudd.co.uk</a></dd>
+
+          <dt>Studio</dt>
+          <dd>North Yorkshire, United Kingdom<br>Visits by appointment</dd>
+
+          <dt>Elsewhere</dt>
+          <dd><a class="link" href="https://www.instagram.com/" rel="me noopener" target="_blank">Instagram</a></dd>
+        </dl>
+
+        <p class="form-note" style="margin-top: var(--space-4)">
+          If you are enquiring about a particular painting, its title and year are helpful — you can copy the link to any work from the gallery.
+        </p>
+      </div>
+
+      <div>
+        <form id="contact-form" method="post" novalidate>
+          <div class="field">
+            <label for="name">Your name</label>
+            <input type="text" id="name" name="name" autocomplete="name" required>
+          </div>
+
+          <div class="field">
+            <label for="email">Email address</label>
+            <input type="email" id="email" name="email" autocomplete="email" required>
+          </div>
+
+          <div class="field">
+            <label for="message">Message</label>
+            <textarea id="message" name="message" required></textarea>
+          </div>
+
+          <!-- Left empty by people, filled in by bots. -->
+          <div class="field--honey" aria-hidden="true">
+            <label for="company">Company</label>
+            <input type="text" id="company" name="_gotcha" tabindex="-1" autocomplete="off">
+          </div>
+
+          <button class="btn" type="submit">Send enquiry</button>
+
+          <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
+
+          <p class="form-note">
+            Your name, email address and message are used only to reply to this enquiry. They are not added to a mailing list or shared with anyone.
+          </p>
+        </form>
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="shell">
+    <div class="site-footer__top">
+      <div>
+        <img class="site-footer__lockup" src="images/site/logo-lockup.png"
+             alt="" width="516" height="237" loading="lazy" decoding="async">
+        <h2>Enquiries welcome</h2>
+        <p class="site-footer__note">For availability, commissions or exhibition enquiries, please get in touch.</p>
+        <p style="margin-top: var(--space-3)"><a class="link-arrow" href="mailto:hello@samrudd.co.uk">Email directly</a></p>
+      </div>
+      <nav aria-label="Footer">
+        <ul class="footer-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="gallery.html">Gallery</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="site-footer__base">
+      <p>© <span id="year">2026</span> Sam Rudd. All works reproduced by permission of the artist.</p>
+      <p>Made in the United Kingdom</p>
+    </div>
+  </div>
+</footer>
+
+<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+<script src="js/main.js" defer></script>
+
+<script>
+(function () {
+  /* Paste the Formspree (or Web3Forms) endpoint here to switch the form on.
+     Until then the form falls back to opening the visitor's email app. */
+  var ENDPOINT = '';
+
+  var CONTACT_EMAIL = 'hello@samrudd.co.uk';
+  var form = document.getElementById('contact-form');
+  var status = document.getElementById('form-status');
+  var button = form.querySelector('button[type="submit"]');
+
+  function say(message, state) {
+    status.textContent = message;
+    status.dataset.state = state;
+  }
+
+  function firstInvalid() {
+    return form.querySelector('input:invalid, textarea:invalid');
+  }
+
+  form.addEventListener('submit', function (event) {
+    event.preventDefault();
+
+    if (!form.checkValidity()) {
+      var field = firstInvalid();
+      say('Please complete the highlighted fields before sending.', 'error');
+      if (field) field.focus();
+      return;
+    }
+
+    var data = new FormData(form);
+
+    if (!ENDPOINT) {
+      var body =
+        'Name: ' + data.get('name') + '\n' +
+        'Email: ' + data.get('email') + '\n\n' +
+        data.get('message');
+      window.location.href =
+        'mailto:' + CONTACT_EMAIL +
+        '?subject=' + encodeURIComponent('Enquiry from samrudd.co.uk') +
+        '&body=' + encodeURIComponent(body);
+      say('Opening your email app so you can send this message to Sam.', 'ok');
+      return;
+    }
+
+    button.disabled = true;
+    say('Sending…', 'ok');
+
+    fetch(ENDPOINT, {
+      method: 'POST',
+      body: data,
+      headers: { Accept: 'application/json' }
+    })
+      .then(function (response) {
+        if (!response.ok) throw new Error('Request failed');
+        form.reset();
+        say('Thank you — your message has been sent. Sam will reply soon.', 'ok');
+      })
+      .catch(function () {
+        say(
+          'Sorry, that did not send. Please email ' + CONTACT_EMAIL + ' directly.',
+          'error'
+        );
+      })
+      .then(function () {
+        button.disabled = false;
+      });
+  });
+})();
+</script>
+</body>
+</html>
