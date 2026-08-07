@@ -57,12 +57,21 @@ Originals live in `originals/` and are never published — only the resized copi
 These are the placeholders that need replacing. Nothing here blocks previewing the
 site locally, but all of it should be sorted before you point a domain at it.
 
-- [ ] **The paintings are fake.** Everything in `images/paintings/` is a generated
-      stand-in so the layout could be built and checked. Replace all of it with real
-      photographs, and rewrite every entry in `js/paintings-data.js` to match.
-- [ ] **The words are invented.** The About page bio, exhibition list, hero tagline
-      and painting titles are placeholder copy. Get Sam's own words in.
-- [ ] **The studio photo** (`images/site/artist-portrait-*.jpg`) is also generated.
+- [ ] **Painting titles are guesses.** The photographs are Sam's real work, but they
+      arrived with only filenames, so every `title` in `js/paintings-data.js` is a
+      working title. One is untitled entirely (the camera called it `dsc04164`).
+      `year`, `medium` and `dimensions` are left blank on purpose — the site omits
+      whatever is empty, so they can be filled in gradually. Do not invent them.
+- [ ] **Better photographs.** Most are only 480–615px wide, so they look soft when
+      opened large. Some show the frame and the wall behind, others show bare canvas.
+      Re-shooting the set consistently, at higher resolution, would improve this page
+      more than any code change.
+- [ ] **The About page has no real biography** — just a general holding paragraph,
+      because nothing about Sam's background has been confirmed. There is a comment
+      in `about.html` marking where her words go. Please don't add places, dates or
+      galleries until she has said them.
+- [ ] **There is no photograph of Sam.** The About page currently shows one of her
+      paintings in that slot instead. Swap in a real portrait or studio photo.
 - [ ] **The email address** `hello@samrudd.co.uk` appears on the contact page and in
       its footer. Change it to the real one.
 - [ ] **The Instagram link** on the contact page points at instagram.com generally.

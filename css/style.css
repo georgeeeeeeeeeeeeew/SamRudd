@@ -496,11 +496,14 @@ a {
   content: '';
   position: absolute;
   inset: 0;
+  /* Sam's paintings are pale and high-key, so the wash has to work harder than it
+     would over a dark photograph to keep the white type legible. It is weighted
+     towards the lower half, where the words sit, leaving the top of the work clear. */
   background: linear-gradient(
     to top,
-    rgb(28 22 16 / 0.72) 0%,
-    rgb(28 22 16 / 0.34) 38%,
-    rgb(28 22 16 / 0.06) 68%,
+    rgb(28 22 16 / 0.78) 0%,
+    rgb(28 22 16 / 0.52) 42%,
+    rgb(28 22 16 / 0.2) 72%,
     transparent 100%
   );
 }

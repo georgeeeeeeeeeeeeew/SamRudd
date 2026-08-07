@@ -94,10 +94,14 @@
     title.textContent = p.title;
     meta.appendChild(title);
 
-    var sub = document.createElement('span');
-    sub.className = 'artwork__sub';
-    sub.textContent = subtitle(p);
-    meta.appendChild(sub);
+    // Year/medium are often not known yet, so only add the line if there is one.
+    var subText = subtitle(p);
+    if (subText) {
+      var sub = document.createElement('span');
+      sub.className = 'artwork__sub';
+      sub.textContent = subText;
+      meta.appendChild(sub);
+    }
 
     button.appendChild(meta);
     li.appendChild(button);
@@ -152,6 +156,7 @@
 
       titleEl.textContent = p.title;
       detailsEl.textContent = details(p);
+      detailsEl.hidden = !detailsEl.textContent;
       counterEl.textContent = index + 1 + ' / ' + items.length;
       liveEl.textContent = p.title + ', image ' + (index + 1) + ' of ' + items.length;
       prevBtn.disabled = index === 0;

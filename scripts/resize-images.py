@@ -44,17 +44,20 @@ def main():
     src_w, src_h = image.size
     aspect = src_h / src_w
 
-    for width in WIDTHS:
-        if width > src_w:
-            print(f"  skip {width}w — source is only {src_w}px wide")
-            continue
+    widths = [w for w in WIDTHS if w <= src_w]
+    # Never upscale, but don't throw away resolution either: if the photo falls
+    # between the standard steps, keep its native size as the largest variant.
+    if src_w < max(WIDTHS) and src_w not in widths:
+        widths.append(src_w)
+    widths = sorted(widths) or [src_w]
+
+    for width in widths:
         resized = image.resize((width, round(width * aspect)), Image.LANCZOS)
         resized.save(out_dir / f"{slug}-{width}.jpg", "JPEG",
                      quality=JPEG_QUALITY, optimize=True, progressive=True)
         resized.save(out_dir / f"{slug}-{width}.webp", "WEBP", quality=WEBP_QUALITY)
         print(f"  wrote {slug}-{width}.jpg / .webp")
 
-    widths = [w for w in WIDTHS if w <= src_w] or [src_w]
     largest = max(widths)
 
     print(f"\nAdd this to js/paintings-data.js:\n")
