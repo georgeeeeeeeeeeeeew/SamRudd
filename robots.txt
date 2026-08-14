@@ -10,4 +10,4 @@ User-agent: *
 Disallow: /
 # Allow: /
 
-Sitemap: https://www.samrudd.co.uk/sitemap.xml
+Sitemap: https://samrudd.moveconsultingpartners.com/sitemap.xml

@@ -99,10 +99,10 @@ site locally, but all of it should be sorted before you point a domain at it.
 - [ ] **The email address** `hello@samrudd.co.uk` appears on the contact page and in
       its footer. Change it to the real one.
 - [ ] **The Instagram link** on the contact page points at instagram.com generally.
-- [ ] **The domain.** `https://www.samrudd.co.uk` is a placeholder and appears in
-      every page's `<link rel="canonical">` and `og:` tags, plus `sitemap.xml`
-      and `robots.txt`. Do not edit those by hand, run
-      `python3 scripts/set_domain.py yourdomain.co.uk` so they cannot drift apart.
+- [x] **The domain** is set to `https://samrudd.moveconsultingpartners.com` across
+      the canonical tags, `og:` tags, `sitemap.xml` and `robots.txt`. If it ever
+      moves, for instance to a domain of Sam's own, do not edit those by hand, run
+      `python3 scripts/set_domain.py newdomain.com` so they cannot drift apart.
 - [ ] **The contact form** currently opens the visitor's email app. To have messages
       arrive as email instead, create a free form endpoint (Formspree or Web3Forms)
       and paste the URL into the `ENDPOINT` variable near the bottom of
@@ -227,7 +227,7 @@ These steps need your accounts, so they have to be done by you:
    and sitemap all agree:
 
    ```bash
-   python3 scripts/set_domain.py yourdomain.co.uk
+   python3 scripts/set_domain.py samrudd.moveconsultingpartners.com
    ```
 
    Commit and push. Use the exact form you chose in step 2, with or without the
