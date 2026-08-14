@@ -1,0 +1,61 @@
+name: Process content
+
+# Runs after Sam saves something in the CMS. It resizes any photograph she
+# uploaded, fills in the details the site needs, rebuilds the home page hero,
+# and commits the result. She sees the change appear on the site a minute or so
+# after saving, without doing anything else.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'content/**'
+      - 'images/uploads/**'
+      - 'scripts/process_content.py'
+      - 'scripts/build_pages.py'
+  # Also runnable by hand from the Actions tab, which is handy for re-running
+  # the whole collection after changing the resizing settings.
+  workflow_dispatch:
+
+# Two saves in quick succession would otherwise race each other to commit.
+concurrency:
+  group: process-content
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  process:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Pillow
+        run: pip install --quiet Pillow
+
+      - name: Resize photographs and rebuild content
+        run: |
+          python3 scripts/process_content.py
+          python3 scripts/build_pages.py
+
+      - name: Commit the result
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          if git diff --quiet && git diff --cached --quiet; then
+            echo "Nothing to commit — content was already up to date."
+            exit 0
+          fi
+
+          git add -A
+          # [skip ci] matters: this commit touches content/, which is one of the
+          # paths that triggers this workflow. Without it the job would set
+          # itself off again on every run.
+          git commit -m "Process uploaded artwork [skip ci]"
+          git push

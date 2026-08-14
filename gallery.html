@@ -106,29 +106,38 @@
 </footer>
 
 <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
-<script src="js/paintings-data.js"></script>
 <script src="js/gallery.js"></script>
 <script src="js/main.js" defer></script>
 
-<!-- Structured data for each painting, so the work can surface in image search. -->
+<!-- Structured data for each painting, so the work can surface in image search.
+     Year and medium are omitted where they are not yet known, rather than
+     published as empty strings. -->
 <script>
 (function () {
-  var graph = PAINTINGS.map(function (p) {
-    return {
-      "@type": "VisualArtwork",
-      "name": p.title,
-      "artform": "Painting",
-      "artMedium": p.medium,
-      "dateCreated": String(p.year),
-      "creator": { "@type": "Person", "name": "Sam Rudd" },
-      "image": "https://www.samrudd.co.uk/images/paintings/" + p.slug + "/" + p.slug + "-1200.jpg",
-      "url": "https://www.samrudd.co.uk/gallery.html#painting=" + p.slug
-    };
-  });
-  var tag = document.createElement('script');
-  tag.type = 'application/ld+json';
-  tag.textContent = JSON.stringify({ "@context": "https://schema.org", "@graph": graph });
-  document.head.appendChild(tag);
+  fetch('content/gallery.json', { cache: 'no-cache' })
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (data) {
+      if (!data || !data.paintings) return;
+      var graph = data.paintings.map(function (p) {
+        var largest = p.widths[p.widths.length - 1];
+        var node = {
+          "@type": "VisualArtwork",
+          "name": p.title,
+          "artform": "Painting",
+          "creator": { "@type": "Person", "name": "Sam Rudd" },
+          "image": "https://www.samrudd.co.uk/images/paintings/" + p.slug + "/" + p.slug + "-" + largest + ".jpg",
+          "url": "https://www.samrudd.co.uk/gallery.html#painting=" + p.slug
+        };
+        if (p.medium) node.artMedium = p.medium;
+        if (p.year) node.dateCreated = String(p.year);
+        return node;
+      });
+      var tag = document.createElement('script');
+      tag.type = 'application/ld+json';
+      tag.textContent = JSON.stringify({ "@context": "https://schema.org", "@graph": graph });
+      document.head.appendChild(tag);
+    })
+    .catch(function () { /* structured data is a bonus; never break the page for it */ });
 })();
 </script>
 </body>

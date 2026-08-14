@@ -1,12 +1,16 @@
-/* Renders painting cards from PAINTINGS and runs the lightbox.
-   Used by both the home page (featured works) and the gallery page. */
+/* Renders painting cards from content/gallery.json and runs the lightbox.
+   Used by both the home page (featured works) and the gallery page.
+
+   The paintings live in a JSON file rather than in this script so that the CMS
+   can edit them. One consequence: the page must be served over http, because a
+   browser refuses to fetch a local file from a page opened with file://. Use
+   the dev server (see README) rather than double-clicking index.html. */
 
 (function () {
   'use strict';
 
-  if (typeof PAINTINGS === 'undefined') return;
-
   var BASE = 'images/paintings/';
+  var DATA = 'content/gallery.json';
 
   function srcset(p, ext) {
     return p.widths
@@ -228,11 +232,19 @@
 
   /* --- Wire up ----------------------------------------------------------- */
 
-  document.addEventListener('DOMContentLoaded', function () {
-    var grid = document.querySelector('[data-gallery]');
-    if (!grid) return;
+  function failed(grid, reason) {
+    // Better a plain sentence and a way to reach Sam than an empty page.
+    var p = document.createElement('p');
+    p.className = 'lede';
+    p.innerHTML =
+      'The paintings could not be loaded just now. Please refresh, or ' +
+      '<a class="link" href="contact.html">get in touch</a> and Sam will gladly send images of the current work.';
+    grid.parentNode.insertBefore(p, grid.nextSibling);
+    if (window.console) console.error('Could not load ' + DATA + ':', reason);
+  }
 
-    var items = PAINTINGS.slice();
+  function render(grid, paintings) {
+    var items = paintings.slice();
     if (grid.dataset.gallery === 'featured') {
       items = items.filter(function (p) { return p.featured; });
     }
@@ -258,11 +270,30 @@
       if (card) lightbox.open(Number(card.dataset.index), card);
     });
 
-    // Shared links like gallery.html#painting=chapel-lane open that work directly.
+    // Shared links like gallery.html#painting=blue-boats open that work directly.
     var match = /#painting=([\w-]+)/.exec(location.hash);
     if (match) {
       var index = items.findIndex(function (p) { return p.slug === match[1]; });
       if (index > -1) lightbox.open(index, null);
     }
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    var grid = document.querySelector('[data-gallery]');
+    if (!grid) return;
+
+    fetch(DATA, { cache: 'no-cache' })
+      .then(function (response) {
+        if (!response.ok) throw new Error('HTTP ' + response.status);
+        return response.json();
+      })
+      .then(function (data) {
+        var paintings = (data && data.paintings) || [];
+        if (!paintings.length) throw new Error('no paintings in ' + DATA);
+        render(grid, paintings);
+      })
+      .catch(function (error) {
+        failed(grid, error);
+      });
   });
 })();

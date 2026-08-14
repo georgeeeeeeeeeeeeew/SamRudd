@@ -1,0 +1,103 @@
+{
+  "paintings": [
+    {
+      "title": "Blue Boats",
+      "photo": "",
+      "alt": "Two blue rowing boats drawn up on pale sand, with cottages and dark trees on the bank behind them.",
+      "year": "",
+      "medium": "",
+      "dimensions": "",
+      "series": "Coastal",
+      "featured": true,
+      "slug": "blue-boats"
+    },
+    {
+      "title": "Boats at the Cove",
+      "photo": "",
+      "alt": "A pink and a grey-green boat resting on soft pink sand below a headland of white cottages, with green sea beyond.",
+      "year": "",
+      "medium": "",
+      "dimensions": "",
+      "series": "Coastal",
+      "featured": true,
+      "slug": "boats-at-cove"
+    },
+    {
+      "title": "Red Boat",
+      "photo": "",
+      "alt": "A red upturned boat in the foreground of a sheltered harbour, two fishing boats on blue water and a cottage under green hills.",
+      "year": "",
+      "medium": "",
+      "dimensions": "",
+      "series": "Coastal",
+      "featured": true,
+      "slug": "red-boat"
+    },
+    {
+      "title": "Church by the Sea",
+      "photo": "",
+      "alt": "A small pale church on a far shore across still water, seen over deep green marshland flecked with wildflowers.",
+      "year": "",
+      "medium": "",
+      "dimensions": "",
+      "series": "Coastal",
+      "featured": true,
+      "slug": "church-in-sea"
+    },
+    {
+      "title": "Fields on the Hill",
+      "photo": "",
+      "alt": "A patchwork hillside of pink, green and yellow fields, with fence posts running along the ridge under a pale sky.",
+      "year": "",
+      "medium": "",
+      "dimensions": "",
+      "series": "Landscape",
+      "featured": true,
+      "slug": "fields-on-hill"
+    },
+    {
+      "title": "Summit",
+      "photo": "",
+      "alt": "An abstracted green hillside broken into soft blocks of moss, lime and dusty pink, with a pale track falling through the middle.",
+      "year": "",
+      "medium": "",
+      "dimensions": "",
+      "series": "Landscape",
+      "featured": true,
+      "slug": "summit"
+    },
+    {
+      "title": "Through the Dunes",
+      "photo": "",
+      "alt": "A dune landscape worked in cream, chalk blue and olive, with thin runs of paint falling down the surface like rain.",
+      "year": "",
+      "medium": "",
+      "dimensions": "",
+      "series": "Coastal",
+      "featured": false,
+      "slug": "through-dunes"
+    },
+    {
+      "title": "Saint, Sand and Sea",
+      "photo": "",
+      "alt": "A pale dune rising to a ridge, painted in soft pinks and cream with olive grasses and scattered dark marks.",
+      "year": "",
+      "medium": "",
+      "dimensions": "",
+      "series": "Coastal",
+      "featured": false,
+      "slug": "saint-sand-sea"
+    },
+    {
+      "title": "Untitled (Green Valley)",
+      "photo": "",
+      "alt": "A deep green valley of layered fields and hedgerows, with flashes of rust and lilac among the greens.",
+      "year": "",
+      "medium": "",
+      "dimensions": "",
+      "series": "Landscape",
+      "featured": false,
+      "slug": "dsc04164"
+    }
+  ]
+}

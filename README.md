@@ -1,54 +1,78 @@
 # Sam Rudd — portfolio site
 
-A plain static site: HTML, one stylesheet, a little JavaScript. No build step, no
-dependencies, no server. Open `index.html` in a browser and it works.
+A plain static site: HTML, one stylesheet, a little vanilla JavaScript. No
+framework, no bundler, nothing to compile. What is in the folder is what the
+browser receives.
+
+Sam maintains the paintings herself through a free CMS — she never sees code.
+Her instructions are in [GUIDE-FOR-SAM.md](GUIDE-FOR-SAM.md); this file is the
+technical side.
+
+**Running it locally** needs a web server, because the pages fetch their content
+as JSON and a browser blocks that over `file://`. Double-clicking `index.html`
+will show an empty gallery. Instead:
+
+```bash
+python3 -m http.server 8123
+```
 
 ---
 
-## Adding a painting
+## How content flows
 
-**1. Make the web-sized versions.** Put the original photo somewhere handy and run:
+```
+Sam saves in the CMS
+        │
+        ▼
+content/paintings.json      ← what she edits: title, photo, description
+images/uploads/…            ← the photograph she uploaded
+        │
+        │  GitHub Action: scripts/process_content.py
+        │    • names the painting (slug) from its title
+        │    • resizes the photo to 400/800/1200/1600 in JPEG + WebP
+        │    • measures the results, tidies the upload away
+        ▼
+content/gallery.json        ← generated; the file the website reads
+        │
+        │  GitHub Action: scripts/build_pages.py
+        ▼
+index.html hero             ← rewritten between the `hero:*` comment markers
+```
+
+Two files, deliberately: **`content/paintings.json` is Sam's**, and
+**`content/gallery.json` is the machine's**. Nothing generated appears in her
+editing form, and nothing she types can be clobbered by the Action.
+
+The hero is the one thing not fetched at runtime. It is the largest image on the
+site and the first thing anyone sees, so it stays as real HTML — drawing it with
+JavaScript would flash an empty rectangle on every visit. `build_pages.py` keeps
+that HTML in step, rewriting only what sits between the `hero:*:start` and
+`hero:*:end` comments in `index.html`.
+
+## Adding a painting yourself
+
+You don't need the CMS. Edit `content/paintings.json`, adding an entry with a
+`photo` pointing at any image on disk, then run:
 
 ```bash
-python3 scripts/resize-images.py originals/your-photo.jpg river-bend-in-june
+python3 scripts/process_content.py && python3 scripts/build_pages.py
 ```
 
-The second argument is the *slug* — lowercase, hyphens, no spaces. It becomes the
-folder name and the shareable link, so pick something readable and don't change it
-later. The script writes four widths (400/800/1200/1600) as both `.jpg` and `.webp`
-into `images/paintings/<slug>/`, then prints a ready-made entry.
+Both are safe to run repeatedly — running them twice changes nothing the second
+time. `--check` on the first one reports what it would do without touching
+anything. `scripts/resize-images.py` is still there for one-off resizing outside
+this flow.
 
-**2. Paste that entry into `js/paintings-data.js`** and fill in the real details.
-Newest paintings go at the top — the gallery displays them in file order.
+**About the description (`alt`):** describe what the painting *shows*, not just
+its title. It is read aloud to blind visitors and it is how the work is found in
+image search. "A slow river turning through summer meadows, its surface breaking
+into pale greens" is useful; "painting" is not. It is a required field in the CMS
+for that reason.
 
-```js
-{
-  slug: "river-bend-in-june",
-  title: "River Bend in June",
-  year: 2025,
-  medium: "Oil on linen",
-  dimensions: "90 × 60 cm",
-  series: "Water",          // optional, unused for now
-  featured: true,           // true = also appears on the home page
-  width: 1600,
-  height: 1080,
-  widths: [400, 800, 1200, 1600],
-  alt: "A slow river turning through summer meadows…",
-},
-```
-
-That's it — the home page and gallery both rebuild themselves from this file.
-
-**About `alt`:** describe what the painting *shows*, not just its title. It's read
-aloud to blind visitors and it's how the work gets found in Google Images. "A slow
-river turning through summer meadows, its surface breaking into pale greens" is
-useful; "painting" is not.
-
-**Removing a painting:** delete its entry from `paintings-data.js`. The image folder
-can stay or go.
-
-Originals live in `originals/` and are never published — only the resized copies in
-`images/` are. Keep the full-resolution files backed up somewhere separate.
+Originals live in `originals/`, which is never published — only the resized
+copies in `images/` are. Keep full-resolution files backed up separately; the
+Action deletes uploads once it has processed them, and the only copy after that
+is in git history.
 
 ---
 
@@ -58,7 +82,7 @@ These are the placeholders that need replacing. Nothing here blocks previewing t
 site locally, but all of it should be sorted before you point a domain at it.
 
 - [ ] **Painting titles are guesses.** The photographs are Sam's real work, but they
-      arrived with only filenames, so every `title` in `js/paintings-data.js` is a
+      arrived with only filenames, so every `title` in `content/paintings.json` is a
       working title. One is untitled entirely (the camera called it `dsc04164`).
       `year`, `medium` and `dimensions` are left blank on purpose — the site omits
       whatever is empty, so they can be filled in gradually. Do not invent them.
@@ -89,19 +113,58 @@ site locally, but all of it should be sorted before you point a domain at it.
 
 ---
 
+## Turning the CMS on
+
+Everything in the repository is already configured. What remains needs your
+GitHub account, so it has to be you:
+
+1. **Authorise Pages CMS.** Go to [app.pagescms.org](https://app.pagescms.org),
+   sign in with GitHub, and grant it access to the `SamRudd` repository (you can
+   grant access to that one repository only — it does not need your whole
+   account). It reads `.pages.yml` from the repo and builds the editing screens
+   from it.
+
+2. **Invite Sam.** In the project's settings, add her by email address. She gets
+   a sign-in link and does **not** need a GitHub account of her own.
+
+3. **Check the Action can push.** In the repository, under
+   *Settings → Actions → General → Workflow permissions*, make sure **Read and
+   write permissions** is selected. Without it the resizing job runs but cannot
+   commit, and nothing Sam saves will ever appear.
+
+4. **Test it end to end before handing it over.** Add a painting yourself through
+   the CMS with a deliberately huge photograph, and confirm that: the Action runs
+   green in the Actions tab, `content/gallery.json` gains an entry, the resized
+   files appear under `images/paintings/`, `images/uploads/` is emptied again,
+   and the painting shows up on the site. Then delete it.
+
+If the Action fails, its log says which painting and why — the script is written
+to name the problem rather than fail silently.
+
+---
+
 ## Layout of the files
 
 ```
 index.html  gallery.html  about.html  contact.html  404.html
-css/style.css              colours, type and layout — all the design lives here
-js/paintings-data.js       the paintings (the file you'll edit most)
-js/gallery.js              builds the grids, runs the lightbox
-js/main.js                 header, mobile menu, scroll reveals
-images/paintings/<slug>/   web-sized paintings, four widths each
-images/site/               studio photo, social-share image
-fonts/                     Fraunces + Inter, self-hosted
-originals/                 full-size masters — not published
-scripts/resize-images.py   the resizer
+.pages.yml                  what Sam sees in the CMS — labels, help text, fields
+GUIDE-FOR-SAM.md            her instructions, in plain English
+content/paintings.json      SOURCE: what Sam edits
+content/settings.json       SOURCE: hero picture and headline
+content/gallery.json        GENERATED: what the website reads — don't hand-edit
+css/style.css               colours, type and layout — all the design lives here
+js/gallery.js               builds the grids, runs the lightbox
+js/main.js                  header, mobile menu, scroll reveals
+images/paintings/<slug>/    web-sized paintings, several widths each
+images/uploads/             where CMS uploads land; emptied by the Action
+images/site/                logo files, social-share image
+brand/                      the logo master as supplied
+fonts/                      Fraunces + Inter, self-hosted (licence included)
+originals/                  full-size masters — not published
+scripts/process_content.py  resizes uploads, writes content/gallery.json
+scripts/build_pages.py      rewrites the home page hero
+scripts/resize-images.py    standalone resizer, for one-offs
+.github/workflows/          the Action that runs the two scripts on save
 ```
 
 Colours and spacing are CSS custom properties at the top of `css/style.css`. The

@@ -1,0 +1,134 @@
+# Pages CMS configuration — https://pagescms.org
+#
+# This decides what Sam sees when she logs in. The labels and descriptions are
+# the actual on-screen wording, so they are written for someone who has never
+# seen code.
+#
+# Note the split: the CMS edits content/paintings.json only. The generated
+# details (image widths, dimensions) live in content/gallery.json, which a
+# GitHub Action writes and the CMS never touches. Sam's form stays clean, and
+# nothing generated can be accidentally overwritten.
+
+media:
+  # Where photographs land when Sam uploads them. The Action collects them from
+  # here, makes the web-sized versions, and clears the folder afterwards.
+  name: uploads
+  label: Photographs
+  input: images/uploads
+  output: /images/uploads
+  extensions: [jpg, jpeg, png, webp, tif, tiff]
+  categories: [image]
+
+content:
+  - name: paintings
+    label: Paintings
+    icon: image
+    type: file
+    path: content/paintings.json
+    format: json
+    fields:
+      - name: paintings
+        label: Paintings
+        type: object
+        description: >-
+          Every painting on the site. Use the handle at the left of a row to drag
+          it up or down — the order here is the order they appear in the gallery,
+          so newest work usually goes at the top.
+        list:
+          default: []
+          summary: '{fields.title}'
+        fields:
+          - name: title
+            label: Title
+            type: string
+            required: true
+            description: The name of the painting, as you would like it shown.
+
+          - name: photo
+            label: Photograph
+            type: image
+            description: >-
+              A photograph of the painting. Upload the biggest, sharpest version
+              you have — it is resized automatically for the web, so there is no
+              need to shrink it first. Leave this alone on paintings already on
+              the site unless you are replacing the photograph.
+
+          - name: alt
+            label: Description of the picture
+            type: text
+            required: true
+            description: >-
+              A sentence describing what the painting shows — "two blue boats on
+              pale sand, with cottages behind". This is read aloud to blind
+              visitors and is how the painting gets found in an image search, so
+              please describe the scene rather than repeating the title.
+
+          - name: year
+            label: Year
+            type: string
+            description: The year it was painted. Leave empty if you would rather not say.
+
+          - name: medium
+            label: Medium
+            type: string
+            description: For example "Oil on canvas". Leave empty if unsure — it is simply left off.
+
+          - name: dimensions
+            label: Size
+            type: string
+            description: For example "60 x 80 cm". Leave empty if unsure.
+
+          - name: series
+            label: Group
+            type: select
+            options:
+              values: [Coastal, Landscape]
+            description: Roughly what kind of painting it is. Not shown on the site yet.
+
+          - name: featured
+            label: Show on the front page
+            type: boolean
+            default: false
+            description: >-
+              Tick to include this painting in the selection on the home page.
+              Around six works well; every painting appears in the gallery either
+              way.
+
+          - name: slug
+            label: Web address name
+            type: string
+            description: >-
+              Filled in automatically from the title the first time a painting is
+              saved. Best left alone afterwards — changing it breaks any link to
+              this painting that has already been shared.
+
+  - name: settings
+    label: Front page
+    icon: settings
+    type: file
+    path: content/settings.json
+    format: json
+    fields:
+      - name: heroSlug
+        label: Large picture at the top
+        type: string
+        required: true
+        description: >-
+          The "Web address name" of the painting to show large across the top of
+          the home page. Copy it from the painting's entry under Paintings — for
+          example, blue-boats. A wide, landscape-shaped painting works best here,
+          because the picture is cropped to a broad band.
+
+      - name: heroHeadingLine1
+        label: Heading, first line
+        type: string
+        description: The large words over the picture. Kept to two short lines so they fit on a phone.
+
+      - name: heroHeadingLine2
+        label: Heading, second line
+        type: string
+
+      - name: heroTagline
+        label: Sentence underneath
+        type: text
+        description: One sentence below the heading. Keep it short — it sits over the painting.
