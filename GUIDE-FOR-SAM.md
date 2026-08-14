@@ -1,7 +1,7 @@
 # Adding paintings to your website
 
-Everything on the site — the paintings, their titles, the big picture on the
-front page — you can change yourself. You don't need to know anything technical,
+You can change everything on the site yourself: the paintings, their titles,
+and the big picture on the front page. You don't need to know anything technical,
 and you can't break the site: every change is saved with a history, so anything
 can be undone.
 
@@ -23,23 +23,23 @@ You'll see two things in the sidebar: **Paintings** and **Front page**.
 2. Click **Add an entry** at the top
 3. Fill in:
 
-   **Title** — the name of the painting.
+   **Title**: the name of the painting.
 
-   **Photograph** — click to upload. Use the biggest, sharpest photo you have.
+   **Photograph**: click to upload. Use the biggest, sharpest photo you have.
    Don't shrink it first; the website makes its own smaller copies automatically,
    and starting from a good photo makes those copies better.
 
-   **Description of the picture** — a sentence saying what the painting shows,
+   **Description of the picture**: a sentence saying what the painting shows,
    for example *"two blue boats on pale sand, with cottages behind"*. This is
    read aloud to blind visitors, and it's how someone searching for "painting of
    boats" might find your work. Describe the scene rather than repeating the
    title.
 
-   **Year**, **Medium**, **Size** — fill in what you know. Leave anything you're
+   **Year**, **Medium** and **Size**: fill in what you know. Leave anything you're
    unsure about empty and it simply won't be shown. It's fine to come back and
    add them later.
 
-   **Show on the front page** — tick this to include the painting in the small
+   **Show on the front page**: tick this to include the painting in the small
    selection on the home page. About six looks best. Every painting appears in
    the gallery whether or not this is ticked.
 
@@ -48,7 +48,7 @@ You'll see two things in the sidebar: **Paintings** and **Front page**.
 Give it a minute or two, then look at the website. The painting will be there.
 
 > **Why the wait?** After you save, the website resizes your photograph behind
-> the scenes so the page loads quickly for visitors — especially anyone on a
+> the scenes so the page loads quickly for visitors, especially anyone on a
 > phone. That takes about a minute. If it hasn't appeared after five, tell
 > George.
 
@@ -64,7 +64,7 @@ the handle at the left of its row. Most artists put newest work at the top.
 ## Changing the big picture on the front page
 
 1. Click **Paintings** and find the painting you want
-2. Copy its **Web address name** — a short lowercase name like `blue-boats`
+2. Copy its **Web address name**, which is a short lowercase name like `blue-boats`
 3. Click **Front page** in the sidebar
 4. Paste it into **Large picture at the top**
 5. Save
@@ -88,13 +88,13 @@ so it can be brought back.
 
 **Photographing your work.** The photographs currently on the site are a little
 small, so they look soft when someone clicks to see a painting close up. If you
-reshoot any of them, larger is better. It also looks tidier if they're consistent
-— at the moment some show the frame and the wall behind, and others show just the
+reshoot any of them, larger is better. It also looks tidier if they are consistent.
+At the moment some show the frame and the wall behind, and others show just the
 canvas. Either is fine, but picking one and sticking to it makes the gallery look
 more considered.
 
 **The titles need checking.** The paintings were put on the site from photograph
-filenames, so the titles are guesses — *Blue Boats*, *Fields on the Hill*, and so
+filenames, so the titles are guesses: *Blue Boats*, *Fields on the Hill*, and so
 on. One is called *Untitled (Green Valley)* because its file had no name at all.
 Please correct any that are wrong.
 

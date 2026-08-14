@@ -1,4 +1,4 @@
-# TEMPORARY PREVIEW SETTING — blocks all search engines.
+# TEMPORARY PREVIEW SETTING, blocks all search engines.
 #
 # The site currently shows placeholder artwork and invented biography/exhibition
 # text under Sam's real name, so it must not be indexed while it is a preview.

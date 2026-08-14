@@ -1,4 +1,4 @@
-# Pages CMS configuration — https://pagescms.org
+# Pages CMS configuration. See https://pagescms.org
 #
 # This decides what Sam sees when she logs in. The labels and descriptions are
 # the actual on-screen wording, so they are written for someone who has never
@@ -32,7 +32,7 @@ content:
         type: object
         description: >-
           Every painting on the site. Use the handle at the left of a row to drag
-          it up or down — the order here is the order they appear in the gallery,
+          it up or down. The order here is the order they appear in the gallery,
           so newest work usually goes at the top.
         list:
           default: []
@@ -49,7 +49,7 @@ content:
             type: image
             description: >-
               A photograph of the painting. Upload the biggest, sharpest version
-              you have — it is resized automatically for the web, so there is no
+              you have. It is resized automatically for the web, so there is no
               need to shrink it first. Leave this alone on paintings already on
               the site unless you are replacing the photograph.
 
@@ -58,7 +58,7 @@ content:
             type: text
             required: true
             description: >-
-              A sentence describing what the painting shows — "two blue boats on
+              A sentence describing what the painting shows, for example "two blue boats on
               pale sand, with cottages behind". This is read aloud to blind
               visitors and is how the painting gets found in an image search, so
               please describe the scene rather than repeating the title.
@@ -71,7 +71,7 @@ content:
           - name: medium
             label: Medium
             type: string
-            description: For example "Oil on canvas". Leave empty if unsure — it is simply left off.
+            description: For example "Oil on canvas". Leave empty if unsure, and it is simply left off.
 
           - name: dimensions
             label: Size
@@ -99,7 +99,7 @@ content:
             type: string
             description: >-
               Filled in automatically from the title the first time a painting is
-              saved. Best left alone afterwards — changing it breaks any link to
+              saved. Best left alone afterwards, because changing it breaks any link to
               this painting that has already been shared.
 
   - name: settings
@@ -115,7 +115,7 @@ content:
         required: true
         description: >-
           The "Web address name" of the painting to show large across the top of
-          the home page. Copy it from the painting's entry under Paintings — for
+          the home page. Copy it from the painting's entry under Paintings. For
           example, blue-boats. A wide, landscape-shaped painting works best here,
           because the picture is cropped to a broad band.
 
@@ -131,4 +131,4 @@ content:
       - name: heroTagline
         label: Sentence underneath
         type: text
-        description: One sentence below the heading. Keep it short — it sits over the painting.
+        description: One sentence below the heading. Keep it short, as it sits over the painting.

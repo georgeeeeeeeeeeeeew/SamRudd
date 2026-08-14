@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Sam Rudd — Artist Portfolio
+   Sam Rudd, Artist Portfolio
    ========================================================================== */
 
 /* --- Fonts ---------------------------------------------------------------- */
@@ -51,7 +51,7 @@
 /* --- Tokens --------------------------------------------------------------- */
 
 :root {
-  /* Warm neutral palette — the paintings supply the colour.
+  /* Warm neutral palette, the paintings supply the colour.
      The accent is the green of the signature logo; --accent-soft is a lighter
      tint of it for use on the dark hero, where the base green goes muddy. */
   --paper: #faf6f1;
@@ -62,6 +62,7 @@
   --rule: #e4dcd0;
   --accent: #50693b;
   --accent-soft: #8aa26c;
+  --arrow-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 8'%3E%3Cpath d='M0 4h22M18.5 1L22 4l-3.5 3' fill='none' stroke='%23000' stroke-width='1' stroke-linecap='square' stroke-linejoin='miter'/%3E%3C/svg%3E");
 
   --font-display: 'Fraunces', 'Iowan Old Style', Georgia, 'Times New Roman', serif;
   --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
@@ -277,21 +278,34 @@ a {
   transition: color 0.25s var(--ease), gap 0.25s var(--ease);
 }
 
+/* An arrow, drawn as a mask so it takes the link's colour. The viewBox is 24x8
+   and the box is 1.5rem (24px) wide, so the SVG renders 1:1 and its
+   stroke-width of 1 lands as the same hairline as the rules elsewhere.
+   The arrow slides on hover rather than stretching, which would otherwise
+   scale the mask and thicken the stroke with it. */
 .link-arrow::after {
   content: '';
   width: 1.5rem;
-  height: 1px;
+  height: 0.5rem;
+  flex: none;
   background: currentColor;
-  transition: width 0.25s var(--ease);
+  -webkit-mask: var(--arrow-mask) no-repeat center / 1.5rem 0.5rem;
+  mask: var(--arrow-mask) no-repeat center / 1.5rem 0.5rem;
+  transition: transform 0.25s var(--ease);
 }
 
 .link-arrow:hover {
   color: var(--accent);
-  gap: 0.85rem;
 }
 
 .link-arrow:hover::after {
-  width: 2.25rem;
+  transform: translateX(0.3rem);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .link-arrow:hover::after {
+    transform: none;
+  }
 }
 
 .rule {
@@ -486,10 +500,20 @@ a {
   inset: 0;
 }
 
+/* The <picture> needs an explicit height of its own, otherwise the img's
+   height:100% has nothing to resolve against, silently falls back to auto, and
+   the painting stops short of the bottom of the hero on narrower screens. */
+.hero__media picture {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
 .hero__media img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center;
 }
 
 .hero__media::after {
@@ -552,48 +576,28 @@ a {
   color: rgb(253 250 246 / 0.6);
 }
 
-/* On narrow screens a landscape painting cropped to a tall hero becomes an
-   unreadable sliver, so stack instead: whole painting first, words beneath. */
+/* The words sit over the painting at every width. A portrait phone screen crops
+   a landscape painting hard, so the hero is kept shorter here than it is on a
+   desktop: less height means less of the sides is cut away. */
 @media (max-width: 42rem) {
   .hero {
-    display: block;
-    min-height: 0;
-    background: var(--paper);
-  }
-
-  .hero__media {
-    position: relative;
-    inset: auto;
-  }
-
-  .hero__media img {
-    height: auto;
-    object-fit: contain;
-  }
-
-  .hero__media::after {
-    display: none;
+    min-height: min(66svh, 32rem);
   }
 
   .hero__inner {
-    padding-block: var(--space-4) var(--space-5);
-    color: var(--ink);
+    padding-block: var(--space-5) var(--space-4);
   }
 
-  .hero__tagline {
-    color: var(--ink-soft);
-  }
-
-  .hero .link-arrow {
-    color: var(--ink);
-  }
-
-  .hero .link-arrow:hover {
-    color: var(--accent);
-  }
-
-  .hero__caption {
-    color: var(--ink-faint);
+  /* Narrower screen, less room for the wash to fade across, so it starts
+     sooner to keep the type readable. */
+  .hero__media::after {
+    background: linear-gradient(
+      to top,
+      rgb(28 22 16 / 0.82) 0%,
+      rgb(28 22 16 / 0.58) 48%,
+      rgb(28 22 16 / 0.26) 78%,
+      rgb(28 22 16 / 0.08) 100%
+    );
   }
 }
 

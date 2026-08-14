@@ -1,10 +1,10 @@
-# Sam Rudd — portfolio site
+# Sam Rudd, portfolio site
 
 A plain static site: HTML, one stylesheet, a little vanilla JavaScript. No
 framework, no bundler, nothing to compile. What is in the folder is what the
 browser receives.
 
-Sam maintains the paintings herself through a free CMS — she never sees code.
+Sam maintains the paintings herself through a free CMS, she never sees code.
 Her instructions are in [GUIDE-FOR-SAM.md](GUIDE-FOR-SAM.md); this file is the
 technical side.
 
@@ -44,7 +44,7 @@ Two files, deliberately: **`content/paintings.json` is Sam's**, and
 editing form, and nothing she types can be clobbered by the Action.
 
 The hero is the one thing not fetched at runtime. It is the largest image on the
-site and the first thing anyone sees, so it stays as real HTML — drawing it with
+site and the first thing anyone sees, so it stays as real HTML. Drawing it with
 JavaScript would flash an empty rectangle on every visit. `build_pages.py` keeps
 that HTML in step, rewriting only what sits between the `hero:*:start` and
 `hero:*:end` comments in `index.html`.
@@ -58,7 +58,7 @@ You don't need the CMS. Edit `content/paintings.json`, adding an entry with a
 python3 scripts/process_content.py && python3 scripts/build_pages.py
 ```
 
-Both are safe to run repeatedly — running them twice changes nothing the second
+Both are safe to run repeatedly, running them twice changes nothing the second
 time. `--check` on the first one reports what it would do without touching
 anything. `scripts/resize-images.py` is still there for one-off resizing outside
 this flow.
@@ -69,7 +69,7 @@ image search. "A slow river turning through summer meadows, its surface breaking
 into pale greens" is useful; "painting" is not. It is a required field in the CMS
 for that reason.
 
-Originals live in `originals/`, which is never published — only the resized
+Originals live in `originals/`, which is never published. Only the resized
 copies in `images/` are. Keep full-resolution files backed up separately; the
 Action deletes uploads once it has processed them, and the only copy after that
 is in git history.
@@ -84,13 +84,13 @@ site locally, but all of it should be sorted before you point a domain at it.
 - [ ] **Painting titles are guesses.** The photographs are Sam's real work, but they
       arrived with only filenames, so every `title` in `content/paintings.json` is a
       working title. One is untitled entirely (the camera called it `dsc04164`).
-      `year`, `medium` and `dimensions` are left blank on purpose — the site omits
+      `year`, `medium` and `dimensions` are left blank on purpose. The site omits
       whatever is empty, so they can be filled in gradually. Do not invent them.
-- [ ] **Better photographs.** Most are only 480–615px wide, so they look soft when
+- [ ] **Better photographs.** Most are only 480-615px wide, so they look soft when
       opened large. Some show the frame and the wall behind, others show bare canvas.
       Re-shooting the set consistently, at higher resolution, would improve this page
       more than any code change.
-- [ ] **The About page has no real biography** — just a general holding paragraph,
+- [ ] **The About page has no real biography**, just a general holding paragraph,
       because nothing about Sam's background has been confirmed. There is a comment
       in `about.html` marking where her words go. Please don't add places, dates or
       galleries until she has said them.
@@ -99,14 +99,14 @@ site locally, but all of it should be sorted before you point a domain at it.
 - [ ] **The email address** `hello@samrudd.co.uk` appears on the contact page and in
       its footer. Change it to the real one.
 - [ ] **The Instagram link** on the contact page points at instagram.com generally.
-- [ ] **The domain.** `https://www.samrudd.co.uk` is assumed throughout — in every
+- [ ] **The domain.** `https://www.samrudd.co.uk` is assumed throughout, in every
       page's `<link rel="canonical">` and `og:` tags, plus `sitemap.xml` and
       `robots.txt`. Find and replace it once the real domain is decided.
 - [ ] **The contact form** currently opens the visitor's email app. To have messages
       arrive as email instead, create a free form endpoint (Formspree or Web3Forms)
       and paste the URL into the `ENDPOINT` variable near the bottom of
       `contact.html`. Then send yourself a test message.
-- [ ] **`robots.txt` currently blocks all search engines**, deliberately — the
+- [ ] **`robots.txt` currently blocks all search engines**, deliberately, because the
       placeholder bio and exhibition list must not get indexed under Sam's real
       name. Reverse it (instructions are in the file) as the last step before
       launch, or the finished site will be invisible to Google.
@@ -120,7 +120,7 @@ GitHub account, so it has to be you:
 
 1. **Authorise Pages CMS.** Go to [app.pagescms.org](https://app.pagescms.org),
    sign in with GitHub, and grant it access to the `SamRudd` repository (you can
-   grant access to that one repository only — it does not need your whole
+   grant access to that one repository only, as it does not need your whole
    account). It reads `.pages.yml` from the repo and builds the editing screens
    from it.
 
@@ -138,7 +138,7 @@ GitHub account, so it has to be you:
    files appear under `images/paintings/`, `images/uploads/` is emptied again,
    and the painting shows up on the site. Then delete it.
 
-If the Action fails, its log says which painting and why — the script is written
+If the Action fails, its log says which painting and why. The script is written
 to name the problem rather than fail silently.
 
 ---
@@ -147,12 +147,12 @@ to name the problem rather than fail silently.
 
 ```
 index.html  gallery.html  about.html  contact.html  404.html
-.pages.yml                  what Sam sees in the CMS — labels, help text, fields
+.pages.yml                  what Sam sees in the CMS, labels, help text, fields
 GUIDE-FOR-SAM.md            her instructions, in plain English
 content/paintings.json      SOURCE: what Sam edits
 content/settings.json       SOURCE: hero picture and headline
-content/gallery.json        GENERATED: what the website reads — don't hand-edit
-css/style.css               colours, type and layout — all the design lives here
+content/gallery.json        GENERATED: what the website reads, don't hand-edit
+css/style.css               colours, type and layout, all the design lives here
 js/gallery.js               builds the grids, runs the lightbox
 js/main.js                  header, mobile menu, scroll reveals
 images/paintings/<slug>/    web-sized paintings, several widths each
@@ -160,7 +160,7 @@ images/uploads/             where CMS uploads land; emptied by the Action
 images/site/                logo files, social-share image
 brand/                      the logo master as supplied
 fonts/                      Fraunces + Inter, self-hosted (licence included)
-originals/                  full-size masters — not published
+originals/                  full-size masters, not published
 scripts/process_content.py  resizes uploads, writes content/gallery.json
 scripts/build_pages.py      rewrites the home page hero
 scripts/resize-images.py    standalone resizer, for one-offs
@@ -175,28 +175,28 @@ the colour.
 
 ### Brand assets
 
-`brand/sam-rudd-logo.png` is the master supplied by Sam — green artwork on a solid
+`brand/sam-rudd-logo.png` is the master supplied by Sam, green artwork on a solid
 white background. It is kept for reference and is **not** used by the site directly:
 its white background would show as a white box against the warm paper colour.
 
 The two files the site actually loads were cut from it, with the white knocked out
 to transparency and the ink set to exactly `--accent`:
 
-- `images/site/logo-signature.png` — the signature alone, used in the header
-- `images/site/logo-lockup.png` — signature plus the SAM RUDD wordmark, used in the footer
+- `images/site/logo-signature.png`: the signature alone, used in the header
+- `images/site/logo-lockup.png`: the signature plus the SAM RUDD wordmark, used in the footer
 
 Both are around 2.5× the size they ever render at, so they stay sharp on retina
 screens without needing separate `@2x` files. If you ever get a vector (SVG) version
-of the logo, it's worth swapping in — it would be smaller and sharper at every size.
+of the logo, it's worth swapping in, because it would be smaller and sharper at every size.
 
 The favicon is a plain "SR" in the brand green, not the signature. The signature's
-thin, flowing strokes turn to mush at 16–32px; the letterforms stay readable.
+thin, flowing strokes turn to mush at 16-32px; the letterforms stay readable.
 
 ---
 
 ## Publishing
 
-Any static host will serve this as-is — drag the folder onto Netlify, or point
+Any static host will serve this as-is, drag the folder onto Netlify, or point
 GitHub Pages / Vercel / Cloudflare Pages at the repository. There is nothing to
 build and no server-side anything.
 

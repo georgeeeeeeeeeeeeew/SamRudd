@@ -9,7 +9,7 @@ saves. For each painting it:
   1. gives it a slug, derived from the title, the first time it is seen
   2. resizes any newly uploaded photograph into images/paintings/<slug>/
   3. measures the images and records their real dimensions
-  4. writes content/gallery.json — the file the website actually reads
+  4. writes content/gallery.json, the file the website actually reads
 
 Paintings added before the CMS existed have no `photo`, because their originals
 were never committed. Those keep whatever images are already on disk, so the
@@ -124,7 +124,7 @@ def main() -> int:
     try:
         source = json.loads(SOURCE.read_text())
     except json.JSONDecodeError as exc:
-        print(f"error: content/paintings.json is not valid JSON — {exc}", file=sys.stderr)
+        print(f"error: content/paintings.json is not valid JSON, {exc}", file=sys.stderr)
         return 1
 
     entries = source.get("paintings") or []
@@ -135,7 +135,7 @@ def main() -> int:
     for position, entry in enumerate(entries, start=1):
         title = (entry.get("title") or "").strip()
         if not title:
-            problems.append(f"painting #{position} has no title — skipped")
+            problems.append(f"painting #{position} has no title, skipped")
             continue
 
         slug = (entry.get("slug") or "").strip()
@@ -167,7 +167,7 @@ def main() -> int:
             measured = measure_existing(slug)
 
         if measured is None:
-            problems.append(f"{title!r}: no images yet — add a photograph in the CMS")
+            problems.append(f"{title!r}: no images yet, add a photograph in the CMS")
             continue
 
         width, height, widths = measured
@@ -208,7 +208,7 @@ def main() -> int:
                 problems.append(f"unused upload left in images/uploads: {leftover.name}")
 
     print(f"\n{len(built)} painting(s) published"
-          f"{' — content/gallery.json updated' if built_changed else ' — no change'}")
+          f"{', content/gallery.json updated' if built_changed else ', no change'}")
     for p in problems:
         print(f"  ! {p}")
     return 0

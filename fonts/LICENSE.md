@@ -4,8 +4,8 @@ Both typefaces bundled in this folder are licensed under the SIL Open Font
 License, Version 1.1, which permits bundling and serving them from this site.
 The full licence text for each is reproduced below, as the OFL requires.
 
-- Fraunces — https://github.com/undercasetype/Fraunces
-- Inter — https://github.com/rsms/inter
+- Fraunces: https://github.com/undercasetype/Fraunces
+- Inter: https://github.com/rsms/inter
 
 ```
 ================================ FRAUNCES ================================

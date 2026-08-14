@@ -3,7 +3,7 @@
 
 The hero is the biggest image on the site and the first thing anyone sees, so
 it stays as real HTML in index.html rather than being fetched and drawn by
-JavaScript — that would leave a blank rectangle on every first visit. This
+JavaScript, which would leave a blank rectangle on every first visit. This
 script keeps that HTML in step with whatever hero painting has been chosen in
 the CMS, by rewriting only the regions between the `hero:*:start` / `hero:*:end`
 comments. Everything outside those markers is left exactly as it is.
@@ -39,7 +39,7 @@ def load(path: Path):
     except FileNotFoundError:
         sys.exit(f"error: {path.relative_to(ROOT)} is missing")
     except json.JSONDecodeError as exc:
-        sys.exit(f"error: {path.relative_to(ROOT)} is not valid JSON — {exc}")
+        sys.exit(f"error: {path.relative_to(ROOT)} is not valid JSON, {exc}")
 
 
 def replace_region(text: str, name: str, body: str) -> str:
@@ -81,7 +81,7 @@ def main() -> None:
             f"       choose one of: {available}"
         )
     if not hero.get("widths"):
-        sys.exit(f"error: '{slug}' has no resized images yet — run the resizer first")
+        sys.exit(f"error: '{slug}' has no resized images yet, run the resizer first")
 
     largest = max(hero["widths"])
     alt = html.escape(hero.get("alt") or hero.get("title", ""), quote=True)

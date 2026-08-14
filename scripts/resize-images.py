@@ -39,7 +39,7 @@ def main():
     out_dir.mkdir(parents=True, exist_ok=True)
 
     # exif_transpose honours the camera's rotation flag, which phones set and
-    # Pillow otherwise ignores — without it, portrait photos come out sideways.
+    # Pillow otherwise ignores. Without it, portrait photos come out sideways.
     image = ImageOps.exif_transpose(Image.open(source)).convert("RGB")
     src_w, src_h = image.size
     aspect = src_h / src_w
@@ -72,7 +72,7 @@ def main():
     print(f"    width: {largest},")
     print(f"    height: {round(largest * aspect)},")
     print(f"    widths: {list(widths)},")
-    print('    alt: "TODO — describe what the painting shows.",')
+    print('    alt: "TODO, describe what the painting shows.",')
     print("  },")
 
 
