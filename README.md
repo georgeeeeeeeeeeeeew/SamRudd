@@ -99,9 +99,10 @@ site locally, but all of it should be sorted before you point a domain at it.
 - [ ] **The email address** `hello@samrudd.co.uk` appears on the contact page and in
       its footer. Change it to the real one.
 - [ ] **The Instagram link** on the contact page points at instagram.com generally.
-- [ ] **The domain.** `https://www.samrudd.co.uk` is assumed throughout, in every
-      page's `<link rel="canonical">` and `og:` tags, plus `sitemap.xml` and
-      `robots.txt`. Find and replace it once the real domain is decided.
+- [ ] **The domain.** `https://www.samrudd.co.uk` is a placeholder and appears in
+      every page's `<link rel="canonical">` and `og:` tags, plus `sitemap.xml`
+      and `robots.txt`. Do not edit those by hand, run
+      `python3 scripts/set_domain.py yourdomain.co.uk` so they cannot drift apart.
 - [ ] **The contact form** currently opens the visitor's email app. To have messages
       arrive as email instead, create a free form endpoint (Formspree or Web3Forms)
       and paste the URL into the `ENDPOINT` variable near the bottom of
@@ -164,6 +165,8 @@ originals/                  full-size masters, not published
 scripts/process_content.py  resizes uploads, writes content/gallery.json
 scripts/build_pages.py      rewrites the home page hero
 scripts/resize-images.py    standalone resizer, for one-offs
+scripts/set_domain.py       points canonical/social/sitemap URLs at a domain
+vercel.json                 caching and security headers for Vercel
 .github/workflows/          the Action that runs the two scripts on save
 ```
 
@@ -194,11 +197,47 @@ thin, flowing strokes turn to mush at 16-32px; the letterforms stay readable.
 
 ---
 
-## Publishing
+## Publishing on Vercel with a custom domain
 
-Any static host will serve this as-is, drag the folder onto Netlify, or point
-GitHub Pages / Vercel / Cloudflare Pages at the repository. There is nothing to
-build and no server-side anything.
+The site is plain static files, so Vercel needs no build step. `vercel.json`
+already sets the caching and security headers; the paintings are cached for a
+day (their filenames stay the same when a photograph is replaced, so a year
+would serve stale work), the fonts for a year, and `content/` never, because
+that is what changes when Sam saves.
 
-Two things to check on the host once deployed: that `404.html` is wired up as the
-not-found page, and that HTTPS is on.
+These steps need your accounts, so they have to be done by you:
+
+1. **Import the repository.** At [vercel.com/new](https://vercel.com/new), sign
+   in with GitHub and import `SamRudd`. Leave every build setting empty: no
+   framework, no build command, output directory `.`. Deploy.
+
+2. **Add the domain.** In the project, go to *Settings, Domains* and add your
+   domain. Add both the bare domain and the `www` version; Vercel will offer to
+   redirect one to the other. Pick whichever you want as the real address and
+   make sure it matches step 4.
+
+3. **Point DNS at Vercel.** At your registrar, add the records Vercel shows you.
+   Usually that is an `A` record for the bare domain pointing at `76.76.21.21`,
+   and a `CNAME` for `www` pointing at `cname.vercel-dns.com`. Vercel's screen is
+   the authority; use what it tells you rather than these examples. Propagation
+   is normally minutes but can take a few hours. HTTPS is issued automatically
+   once the records resolve.
+
+4. **Tell the site its own address**, so the canonical links, social preview tags
+   and sitemap all agree:
+
+   ```bash
+   python3 scripts/set_domain.py yourdomain.co.uk
+   ```
+
+   Commit and push. Use the exact form you chose in step 2, with or without the
+   `www`.
+
+5. **Turn GitHub Pages off** in the repository settings, under *Pages*. Leaving
+   both live means two copies of the same site on different addresses, which
+   splits search ranking between them.
+
+After this, every push to `main` deploys automatically, including the commits
+the content workflow makes when Sam adds a painting. Nothing else changes: Pages
+CMS still writes to the same repository, and the resizing Action still runs.
+
