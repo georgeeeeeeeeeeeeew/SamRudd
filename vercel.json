@@ -5,21 +5,18 @@
   "outputDirectory": ".",
   "headers": [
     {
-      "comment": "Fonts never change once published, so they can be cached hard.",
       "source": "/fonts/(.*)",
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
       ]
     },
     {
-      "comment": "Paintings keep the same filename when a photograph is replaced, so this is a day rather than a year. Long enough to help repeat visits, short enough that a swapped photograph appears the next day.",
       "source": "/images/(.*)",
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=86400, must-revalidate" }
       ]
     },
     {
-      "comment": "The gallery data changes whenever Sam saves, so it must always be revalidated or new paintings would not show up.",
       "source": "/content/(.*)",
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }

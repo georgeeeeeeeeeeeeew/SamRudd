@@ -200,10 +200,18 @@ thin, flowing strokes turn to mush at 16-32px; the letterforms stay readable.
 ## Publishing on Vercel with a custom domain
 
 The site is plain static files, so Vercel needs no build step. `vercel.json`
-already sets the caching and security headers; the paintings are cached for a
-day (their filenames stay the same when a photograph is replaced, so a year
-would serve stale work), the fonts for a year, and `content/` never, because
-that is what changes when Sam saves.
+sets the caching and security headers.
+
+Note that `vercel.json` is strict JSON and rejects any key it does not
+recognise, including comments, so the reasoning behind the cache rules lives
+here instead:
+
+| Path | Cache | Why |
+| --- | --- | --- |
+| `/fonts/` | 1 year, immutable | The font files never change. |
+| `/images/` | 1 day | Paintings keep the same filename when a photograph is replaced, so a longer cache would keep serving the old photo after Sam swaps it. |
+| `/content/` | never | This is the file that changes when Sam saves. Caching it would hide new paintings. |
+| everything | no cache rule | Vercel's defaults for HTML are fine; the rule here only adds security headers. |
 
 These steps need your accounts, so they have to be done by you:
 
