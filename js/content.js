@@ -24,7 +24,11 @@ window.SamRudd = (function () {
      parameters are only present on some navigations, ancestorOrigins does not
      exist in Firefox, and the referrer is empty once the panel navigates within
      itself. Any one of them is enough. */
-  var STUDIO_HOST = /(^|\.)sanity\.studio$/;
+  /* The Studio is reachable at <project>.sanity.studio and also embedded in
+     Sanity's dashboard on sanity.io, so both count as being inside the Studio.
+     Anchored at the end and requiring a dot or start before it, so a lookalike
+     like notsanity.studio or sanity.io.attacker.com does not match. */
+  var STUDIO_HOST = /(^|\.)sanity\.(studio|io)$/;
 
   function hostOf(url) {
     try { return new URL(url).hostname; } catch (e) { return ''; }
