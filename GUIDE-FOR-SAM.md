@@ -29,6 +29,10 @@ You'll see a list down the side:
 There is a **Preview** tab at the top of the studio. It shows the real website
 inside the page, so you can check how something looks without leaving.
 
+**You can edit from there.** Hover over any wording on the page and it will
+outline; click it and the right box opens beside the preview, already scrolled
+to the thing you clicked. It is often quicker than finding the page in the list.
+
 Publish first, then reload the preview. The website only ever shows published
 work, so anything still being edited will not appear there.
 

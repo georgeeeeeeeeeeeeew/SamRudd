@@ -48,13 +48,17 @@
     if (el && value) el.textContent = value;
   }
 
-  fetch(API + '?query=' + encodeURIComponent(GROQ), {cache: 'no-cache'})
-    .then(function (r) {
-      if (!r.ok) throw new Error('HTTP ' + r.status);
-      return r.json();
-    })
-    .then(function (body) {
-      var s = body.result;
+  var fetchHero = (window.SamRudd && window.SamRudd.query)
+    ? window.SamRudd.query(GROQ)
+    : fetch(API + '?query=' + encodeURIComponent(GROQ), {cache: 'no-cache'})
+        .then(function (r) {
+          if (!r.ok) throw new Error('HTTP ' + r.status);
+          return r.json();
+        })
+        .then(function (body) { return body.result; });
+
+  fetchHero
+    .then(function (s) {
       if (!s) return;
 
       var heading = hero.querySelector('.hero__title');

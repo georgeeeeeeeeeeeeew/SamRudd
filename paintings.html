@@ -109,10 +109,6 @@
 </footer>
 
 <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
-<script src="js/gallery.js"></script>
-<script src="js/content.js"></script>
-<script src="js/pages.js" defer></script>
-<script src="js/main.js" defer></script>
 
 <!-- Structured data for each painting, so the work can surface in image search.
      Read from Sanity like everything else, and quietly skipped if that fails,
@@ -149,5 +145,10 @@
     .catch(function () { /* never break the page for structured data */ });
 })();
 </script>
+<script src="js/content.js"></script>
+<script src="js/visual-editing.js" defer></script>
+<script src="js/gallery.js"></script>
+<script src="js/pages.js" defer></script>
+<script src="js/main.js" defer></script>
 </body>
 </html>

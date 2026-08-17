@@ -31,9 +31,20 @@ Sam publishes in Sanity  ->  the next page load shows it
 - **Studio** (what Sam sees): https://samrudd.sanity.studio
 - **Project id**: `3zrcphqr`, dataset `production`, read publicly
 - **Studio source**: `studio/`, deployed with `sanity deploy`
-- **Preview tab**: embeds the live site in the studio. `SITE_URL` at the top of
+- **Preview tab**: embeds the live site in the studio, with click-to-edit. `SITE_URL` at the top of
   `studio/sanity.config.ts` points at it and needs changing when the custom
   domain goes live.
+
+Click-to-edit works without annotating the markup. In the preview only,
+`js/content.js` swaps its plain fetch for Sanity's client with stega encoding
+turned on, which hides the source field path inside each string as invisible
+characters; `js/visual-editing.js` then loads the overlays that read them. Both
+are pinned and requested with `?bundle`, because unbundled esm.sh serves them as
+200+ modules and the preview sat blank for twenty seconds.
+
+None of it runs for visitors: `SamRudd.inPreview` is false outside the studio
+frame, so no CDN request is made and no markers appear in the text. Verified by
+loading the site normally and counting both.
 
 Embedding needs the site to permit it. `vercel.json` sends
 `Content-Security-Policy: frame-ancestors 'self' https://*.sanity.studio` rather

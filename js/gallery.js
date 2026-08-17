@@ -33,8 +33,13 @@
               '|order(pinned desc, date desc, position asc)' + FIELDS
   };
 
+  /* Delegates to content.js so the gallery goes through the same path as
+     everything else, including the stega-encoded client used in the preview.
+     Falls back to a plain request if content.js somehow is not loaded. */
   function query(groq) {
-    // See the note in content.js: revalidate so an edit shows on the next reload.
+    if (window.SamRudd && window.SamRudd.query) {
+      return window.SamRudd.query(groq).then(function (r) { return r || []; });
+    }
     return fetch(API + '?query=' + encodeURIComponent(groq), {cache: 'no-cache'})
       .then(function (r) {
         if (!r.ok) throw new Error('HTTP ' + r.status);

@@ -11,9 +11,55 @@ window.SamRudd = (function () {
   'use strict';
 
   var PROJECT = '3zrcphqr';
+  var STUDIO = 'https://samrudd.sanity.studio';
   var API = 'https://' + PROJECT + '.apicdn.sanity.io/v2024-01-01/data/query/production';
 
-  function query(groq) {
+  /* Is this page being shown inside the Studio's Preview panel?
+
+     Being in an iframe is not enough on its own, since anyone could embed the
+     site, and that is no reason to load an editing toolkit. Presentation
+     announces itself in the URL, so look for that as well. */
+  var inPreview = (function () {
+    try {
+      if (window.self === window.top) return false;
+      var params = new URLSearchParams(location.search);
+      return params.has('sanity-preview-pathname') ||
+             params.has('sanity-preview-perspective') ||
+             params.get('preview') === 'true';
+    } catch (e) {
+      return false;   // a cross-origin frame we cannot inspect: assume not
+    }
+  })();
+
+  /* In the preview, responses need markers saying which field each value came
+     from, which is what makes clicking the page open the right box. That needs
+     Sanity's client library, so it is fetched on demand and only here. Every
+     query waits on the same promise, so the first render already carries the
+     markers and nothing has to be drawn twice.
+
+     ?bundle matters: without it esm.sh serves the library as hundreds of
+     separate modules, which took over twenty seconds to finish and left the
+     preview blank meanwhile. Bundled it is one file. The version is pinned so
+     a future release cannot quietly change either. */
+  var clientReady = inPreview
+    ? import('https://esm.sh/@sanity/client@8.0.0?bundle')
+        .then(function (mod) {
+          return mod.createClient({
+            projectId: PROJECT,
+            dataset: 'production',
+            apiVersion: '2024-01-01',
+            useCdn: false,             // a preview should never lag behind
+            perspective: 'published',  // show what visitors actually see
+            stega: {enabled: true, studioUrl: STUDIO}
+          });
+        })
+        .catch(function (e) {
+          if (window.console) console.error('Preview: falling back to plain fetch', e);
+          return null;
+        })
+    : null;
+
+  function plainFetch(groq) {
     /* no-cache revalidates with Sanity rather than reusing whatever the browser
        has. Their CDN sends max-age=3, which is short but long enough that a
        reload straight after an edit could show the old content, and the whole
@@ -24,6 +70,13 @@ window.SamRudd = (function () {
         return r.json();
       })
       .then(function (body) { return body.result; });
+  }
+
+  function query(groq) {
+    if (!clientReady) return plainFetch(groq);
+    return clientReady.then(function (client) {
+      return client ? client.fetch(groq) : plainFetch(groq);
+    });
   }
 
   /* Sanity resizes on request, so a width is just a parameter on the URL. */
@@ -164,6 +217,7 @@ window.SamRudd = (function () {
   }
 
   return {
+    inPreview: inPreview,
     query: query,
     imageUrl: imageUrl,
     srcset: srcset,
