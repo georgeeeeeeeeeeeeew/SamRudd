@@ -236,7 +236,7 @@
       a.href = row.bookingUrl;
       a.target = '_blank';
       a.rel = 'noopener';
-      a.textContent = 'Book a place';
+      a.textContent = window.SamRuddBookLabel || 'Book a place';
       book.appendChild(a);
       body.appendChild(book);
     }
@@ -310,15 +310,45 @@
       });
   }
 
-  /* --- Footer, on every page --------------------------------------------- */
+  /* --- Footer and button wording, on every page --------------------------- */
+
+  /* Maps the data-label on an element to the field holding its wording. The
+     words stay in the HTML as well, so a slow or failed request leaves real
+     buttons rather than empty ones. */
+  var LABEL_FIELDS = {
+    viewGallery: 'labelViewGallery',
+    moreAbout: 'labelMoreAbout',
+    contact: 'labelContact',
+    emailDirect: 'labelEmailDirect',
+    showMore: 'labelShowMore',
+    sendEnquiry: 'labelSendEnquiry',
+    goToGallery: 'labelGoToGallery',
+    bookPlace: 'labelBookPlace'
+  };
 
   function renderFooter() {
-    S.query('*[_id=="siteSettings"][0]{footerHeading,footerNote,footerTagline}')
+    var fields = Object.keys(LABEL_FIELDS).map(function (k) { return LABEL_FIELDS[k]; });
+    S.query('*[_id=="siteSettings"][0]{footerHeading,footerNote,footerTagline,' +
+            fields.join(',') + '}')
       .then(function (s) {
         if (!s) return;
         S.setText('[data-footer-heading]', s.footerHeading);
         S.setText('[data-footer-note]', s.footerNote);
         S.setText('[data-footer-tagline]', s.footerTagline);
+
+        // One field can drive several elements: "Contact Sam" is in every footer.
+        Object.keys(LABEL_FIELDS).forEach(function (key) {
+          var value = s[LABEL_FIELDS[key]];
+          if (!value) return;
+          document.querySelectorAll('[data-label="' + key + '"]').forEach(function (el) {
+            el.textContent = value;
+          });
+        });
+
+        // The gallery's show-more button rewrites its own text as it pages, so
+        // it needs to know the chosen wording rather than the built-in default.
+        if (s.labelShowMore) window.SamRuddShowMoreLabel = s.labelShowMore;
+        if (s.labelBookPlace) window.SamRuddBookLabel = s.labelBookPlace;
       })
       .catch(function () { /* the HTML already says something sensible */ });
   }

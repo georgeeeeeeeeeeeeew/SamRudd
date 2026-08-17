@@ -141,9 +141,12 @@ Courses disappear from the page by themselves once the date has passed.
 **About page**, **Studio page** and **Contact details** each open a form with the
 text on that page. Change what you like and publish.
 
-The **Front page** screen has tabs across the top for the different parts of the
-home page: the big picture at the top, the selected work section, the about
-section, and the footer.
+The **Front page** screen has tabs across the top: Hero, Featured work, About,
+Footer, and **Buttons**.
+
+**Buttons** holds the wording on every button and link on the site, so "View the
+gallery" or "Contact Sam" can be reworded without anyone touching the code. One
+box changes it everywhere that wording appears.
 
 In the text boxes you can use **bold**, *italic*, links and bullet points, and
 add subheadings to break up a long page. You cannot break the layout, so

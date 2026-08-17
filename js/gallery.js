@@ -357,7 +357,7 @@
     function updateChrome(shown, total) {
       if (moreBtn) {
         moreBtn.hidden = shown >= total;
-        moreBtn.textContent = 'Show more paintings';
+        moreBtn.textContent = window.SamRuddShowMoreLabel || 'Show more paintings';
       }
       if (countEl) {
         countEl.textContent = shown >= total

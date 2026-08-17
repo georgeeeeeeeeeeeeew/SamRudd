@@ -10,6 +10,7 @@ export const siteSettings = defineType({
     {name: 'featured', title: 'Featured work'},
     {name: 'about', title: 'About'},
     {name: 'footer', title: 'Footer'},
+    {name: 'labels', title: 'Buttons'},
   ],
   fields: [
     defineField({
@@ -60,6 +61,26 @@ export const siteSettings = defineType({
     defineField({name: 'footerNote', title: 'Intro', type: 'text', rows: 2, group: 'footer'}),
     defineField({name: 'footerTagline', title: 'Strapline', type: 'string', group: 'footer',
       description: 'Sits beside the copyright line.'}),
+
+    /* The wording on every button and link. These rarely change, which is why
+       they lived in the code, but leaving them there meant nobody but a
+       developer could reword them. */
+    defineField({name: 'labelViewGallery', title: 'View the gallery', type: 'string', group: 'labels',
+      description: 'Under the hero, under Featured, and at the foot of the About page.'}),
+    defineField({name: 'labelMoreAbout', title: 'More about Sam', type: 'string', group: 'labels',
+      description: 'Under the About section on the home page.'}),
+    defineField({name: 'labelContact', title: 'Contact Sam', type: 'string', group: 'labels',
+      description: 'In the footer.'}),
+    defineField({name: 'labelEmailDirect', title: 'Email directly', type: 'string', group: 'labels',
+      description: 'In the footer of the contact page.'}),
+    defineField({name: 'labelShowMore', title: 'Show more paintings', type: 'string', group: 'labels',
+      description: 'The button at the foot of the gallery.'}),
+    defineField({name: 'labelSendEnquiry', title: 'Send enquiry', type: 'string', group: 'labels',
+      description: 'The submit button on the contact form.'}),
+    defineField({name: 'labelGoToGallery', title: 'Go to the gallery', type: 'string', group: 'labels',
+      description: 'On the page-not-found page.'}),
+    defineField({name: 'labelBookPlace', title: 'Book a place', type: 'string', group: 'labels',
+      description: 'On a course with a booking link.'}),
   ],
   preview: {prepare: () => ({title: 'Front page'})},
 })
