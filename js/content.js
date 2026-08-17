@@ -16,18 +16,41 @@ window.SamRudd = (function () {
 
   /* Is this page being shown inside the Studio's Preview panel?
 
-     Being in an iframe is not enough on its own, since anyone could embed the
-     site, and that is no reason to load an editing toolkit. Presentation
-     announces itself in the URL, so look for that as well. */
+     Being in an iframe is not enough on its own: anyone can embed the site, and
+     that is no reason to load an editing toolkit and start asking for drafts.
+     So the test is that we are framed *by the Studio*.
+
+     Three ways of establishing that, because no single one is reliable. The URL
+     parameters are only present on some navigations, ancestorOrigins does not
+     exist in Firefox, and the referrer is empty once the panel navigates within
+     itself. Any one of them is enough. */
+  var STUDIO_HOST = /(^|\.)sanity\.studio$/;
+
+  function hostOf(url) {
+    try { return new URL(url).hostname; } catch (e) { return ''; }
+  }
+
   var inPreview = (function () {
     try {
       if (window.self === window.top) return false;
+
       var params = new URLSearchParams(location.search);
-      return params.has('sanity-preview-pathname') ||
-             params.has('sanity-preview-perspective') ||
-             params.get('preview') === 'true';
+      if (params.has('sanity-preview-pathname') ||
+          params.has('sanity-preview-perspective') ||
+          params.get('preview') === 'true') return true;
+
+      var ancestors = location.ancestorOrigins;
+      if (ancestors) {
+        for (var i = 0; i < ancestors.length; i++) {
+          if (STUDIO_HOST.test(hostOf(ancestors[i]))) return true;
+        }
+      }
+
+      if (document.referrer && STUDIO_HOST.test(hostOf(document.referrer))) return true;
+
+      return false;
     } catch (e) {
-      return false;   // a cross-origin frame we cannot inspect: assume not
+      return false;   // a frame we cannot inspect: treat as an ordinary visit
     }
   })();
 
