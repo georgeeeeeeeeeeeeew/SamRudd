@@ -138,8 +138,12 @@ Courses disappear from the page by themselves once the date has passed.
 
 ## Changing the words on a page
 
-**About page**, **Studio page** and **Contact details** each open a form with the
-text on that page. Change what you like and publish.
+Each page has its own entry in the sidebar: **Paintings page**, **Exhibitions
+page**, **Courses page**, **About page**, **Studio page** and **Contact
+details**. Each holds the small label, the heading and the opening line at the
+top of that page, and the About and Studio ones hold the body text as well.
+
+Change what you like and publish.
 
 The **Front page** screen has tabs across the top: Hero, Featured work, About,
 Footer, and **Buttons**.

@@ -45,6 +45,8 @@ export const siteSettings = defineType({
     defineField({name: 'featuredHeading', title: 'Heading', type: 'string', group: 'featured'}),
     defineField({name: 'featuredIntro', title: 'Intro', type: 'text', rows: 3, group: 'featured'}),
 
+    defineField({name: 'aboutEyebrow', title: 'Eyebrow', type: 'string', group: 'about',
+      description: 'The small uppercase line above the heading.'}),
     defineField({name: 'aboutHeading', title: 'Heading', type: 'string', group: 'about'}),
     defineField({name: 'aboutLede', title: 'Standfirst', type: 'text', rows: 3, group: 'about'}),
     defineField({name: 'aboutBody', title: 'Body', type: 'text', rows: 5, group: 'about'}),

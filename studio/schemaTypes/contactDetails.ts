@@ -6,6 +6,8 @@ export const contactDetails = defineType({
   title: 'Contact details',
   type: 'document',
   fields: [
+    defineField({name: 'eyebrow', title: 'Eyebrow', type: 'string',
+      description: 'The small uppercase line above the heading.'}),
     defineField({name: 'heading', title: 'Heading', type: 'string'}),
     defineField({name: 'lede', title: 'Standfirst', type: 'text', rows: 3}),
     defineField({

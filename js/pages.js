@@ -17,11 +17,33 @@
   var page = document.body.dataset.page;
   if (!page) return;
 
+  /* --- Page headers ------------------------------------------------------
+
+     Every page's eyebrow, heading and opening line come from a document of its
+     own, so the wording at the top of a page is editable in the same place as
+     the wording in it. Pages that are only a header, Paintings, Exhibitions and
+     Courses, use the same document type with an empty body. */
+
+  function applyHeader(doc) {
+    if (!doc) return;
+    S.setText('[data-page-eyebrow]', doc.eyebrow);
+    S.setText('[data-page-heading]', doc.heading);
+    S.setText('[data-page-lede]', doc.lede);
+  }
+
+  function renderHeaderOnly(id) {
+    S.query('*[_id=="' + id + '"][0]{eyebrow,heading,lede}')
+      .then(applyHeader)
+      .catch(function (e) {
+        if (window.console) console.error('Could not load ' + id + ':', e);
+      });
+  }
+
   /* --- About and Studio -------------------------------------------------- */
 
   function renderProsePage(id) {
     var body = document.querySelector('[data-page-body]');
-    var groq = '*[_id=="' + id + '"][0]{heading,lede,body,imageAlt,' +
+    var groq = '*[_id=="' + id + '"][0]{eyebrow,heading,lede,body,imageAlt,' +
       '"imageUrl":image.asset->url,' +
       '"imageWidth":image.asset->metadata.dimensions.width,' +
       '"imageHeight":image.asset->metadata.dimensions.height}';
@@ -29,8 +51,7 @@
     S.query(groq)
       .then(function (doc) {
         if (!doc) return;
-        S.setText('[data-page-heading]', doc.heading);
-        S.setText('[data-page-lede]', doc.lede);
+        applyHeader(doc);
 
         if (body) {
           body.textContent = '';
@@ -248,13 +269,12 @@
   /* --- Contact ----------------------------------------------------------- */
 
   function renderContact() {
-    var groq = '*[_id=="contactDetails"][0]{heading,lede,email,location,instagramUrl,galleryNote}';
+    var groq = '*[_id=="contactDetails"][0]{eyebrow,heading,lede,email,location,instagramUrl,galleryNote}';
 
     S.query(groq)
       .then(function (doc) {
         if (!doc) return;
-        S.setText('[data-page-heading]', doc.heading);
-        S.setText('[data-page-lede]', doc.lede);
+        applyHeader(doc);
         S.setText('[data-contact-location]', doc.location);
         S.setText('[data-contact-note]', doc.galleryNote);
 
@@ -281,7 +301,7 @@
 
   function renderHomeSections() {
     var groq = '*[_id=="siteSettings"][0]{featuredEyebrow,featuredHeading,featuredIntro,' +
-      'aboutHeading,aboutLede,aboutBody,' +
+      'aboutEyebrow,aboutHeading,aboutLede,aboutBody,' +
       '"aboutImage":aboutImage->{alt,title,"url":photo.asset->url,' +
       '"width":photo.asset->metadata.dimensions.width,' +
       '"height":photo.asset->metadata.dimensions.height}}';
@@ -292,6 +312,7 @@
         S.setText('[data-featured-eyebrow]', s.featuredEyebrow);
         S.setText('[data-featured-heading]', s.featuredHeading);
         S.setText('[data-featured-intro]', s.featuredIntro);
+        S.setText('[data-about-eyebrow]', s.aboutEyebrow);
         S.setText('[data-about-heading]', s.aboutHeading);
         S.setText('[data-about-lede]', s.aboutLede);
         S.setText('[data-about-body]', s.aboutBody);
@@ -357,8 +378,9 @@
     home: renderHomeSections,
     about: function () { renderProsePage('page-about'); },
     studio: function () { renderProsePage('page-studio'); },
-    exhibitions: renderExhibitions,
-    courses: renderCourses,
+    paintings: function () { renderHeaderOnly('page-paintings'); },
+    exhibitions: function () { renderHeaderOnly('page-exhibitions'); renderExhibitions(); },
+    courses: function () { renderHeaderOnly('page-courses'); renderCourses(); },
     contact: renderContact
   };
 

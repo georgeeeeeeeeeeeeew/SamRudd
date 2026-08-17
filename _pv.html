@@ -1,0 +1,25 @@
+<!doctype html>
+<title>eyebrow check</title>
+<div id="out" style="font:13px ui-monospace;padding:12px"></div>
+<script>
+const pages = ['index','about','exhibitions','courses','studio','contact'];
+(async () => {
+  const out = document.getElementById('out');
+  for (const p of pages) {
+    const f = document.createElement('iframe');
+    f.style.cssText = 'width:0;height:0;border:0;position:absolute';
+    f.src = '/' + p + '.html';
+    document.body.appendChild(f);
+    await new Promise(r => f.onload = r);
+    await new Promise(r => setTimeout(r, 2200));
+    const d = f.contentDocument;
+    const eb = d.querySelector('[data-page-eyebrow]')?.textContent
+            || d.querySelector('[data-about-eyebrow]')?.textContent;
+    const h = d.querySelector('[data-page-heading]')?.textContent
+            || d.querySelector('[data-about-heading]')?.textContent;
+    out.textContent += p.padEnd(14) + ' eyebrow=' + eb + '   heading=' + h + '\n';
+    f.remove();
+  }
+  out.textContent += 'done';
+})();
+</script>

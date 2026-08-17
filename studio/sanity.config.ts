@@ -16,6 +16,9 @@ const SINGLETONS = [
   {id: 'siteSettings', type: 'siteSettings', title: 'Front page'},
   {id: 'page-about', type: 'page', title: 'About page'},
   {id: 'page-studio', type: 'page', title: 'Studio page'},
+  {id: 'page-paintings', type: 'page', title: 'Paintings page'},
+  {id: 'page-exhibitions', type: 'page', title: 'Exhibitions page'},
+  {id: 'page-courses', type: 'page', title: 'Courses page'},
   {id: 'contactDetails', type: 'contactDetails', title: 'Contact details'},
 ]
 

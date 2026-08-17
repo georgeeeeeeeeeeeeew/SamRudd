@@ -21,6 +21,12 @@ export const page = defineType({
       description: 'Which page this is.',
     }),
     defineField({
+      name: 'eyebrow',
+      title: 'Eyebrow',
+      type: 'string',
+      description: 'The small uppercase line above the heading.',
+    }),
+    defineField({
       name: 'heading',
       title: 'Heading',
       type: 'string',
