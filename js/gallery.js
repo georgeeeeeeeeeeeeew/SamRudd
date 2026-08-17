@@ -114,7 +114,12 @@
 
   /* --- Lightbox ---------------------------------------------------------- */
 
-  function Lightbox(items) {
+  /* One instance per page, created once. Rebuilding it whenever the grid
+     changes would leave orphaned dialogs in the DOM and, worse, add another
+     document keydown listener every time, so Escape would eventually fire on
+     a stack of dead lightboxes. setItems swaps the contents instead. */
+  function Lightbox() {
+    var items = [];
     var root = document.createElement('div');
     root.className = 'lightbox';
     root.setAttribute('role', 'dialog');
@@ -227,7 +232,11 @@
       }
     });
 
-    return { open: open };
+    function setItems(next) {
+      items = next;
+    }
+
+    return { open: open, setItems: setItems };
   }
 
   /* --- Wire up ----------------------------------------------------------- */
@@ -243,44 +252,144 @@
     if (window.console) console.error('Could not load ' + DATA + ':', reason);
   }
 
+  /* How many cards to add each time. Drawing several hundred at once is slow
+     on a phone even with the images lazy-loaded, because every card is still
+     DOM the browser has to lay out. */
+  var PAGE_SIZE = 24;
+
   function render(grid, paintings) {
-    var items = paintings.slice();
-    if (grid.dataset.gallery === 'featured') {
-      items = items.filter(function (p) { return p.featured; });
-    }
+    var all = paintings.slice();
 
     var limit = parseInt(grid.dataset.limit, 10);
-    if (!isNaN(limit)) items = items.slice(0, limit);
+    if (!isNaN(limit)) all = all.slice(0, limit);
 
     // Past 82rem the page stops widening, so the last value is a fixed px cap
     // rather than a vw fraction that would keep over-requesting.
     var sizes = grid.dataset.sizes ||
       '(max-width: 37.5rem) 92vw, (max-width: 62rem) 46vw, (max-width: 82rem) 31vw, 380px';
 
-    var fragment = document.createDocumentFragment();
-    items.forEach(function (p, i) {
-      fragment.appendChild(buildCard(p, i, sizes));
-    });
-    grid.appendChild(fragment);
+    var paged = grid.dataset.paged === 'true';
+    var moreBtn = document.querySelector('[data-gallery-more]');
+    var countEl = document.querySelector('[data-gallery-count]');
+    var filterBar = document.querySelector('[data-gallery-filters]');
 
-    var lightbox = Lightbox(items);
+    var visible = [];      // what is currently in the grid, in order
+    var lightbox = Lightbox();
+    var activeSeries = 'all';
+
+    function matching() {
+      if (activeSeries === 'all') return all;
+      return all.filter(function (p) { return p.series === activeSeries; });
+    }
+
+    function appendCards(from, list) {
+      var fragment = document.createDocumentFragment();
+      var upto = paged ? Math.min(from + PAGE_SIZE, list.length) : list.length;
+      for (var i = from; i < upto; i++) {
+        fragment.appendChild(buildCard(list[i], i, sizes));
+        visible.push(list[i]);
+      }
+      grid.appendChild(fragment);
+      return upto;
+    }
+
+    function updateChrome(shown, total) {
+      if (moreBtn) {
+        moreBtn.hidden = shown >= total;
+        moreBtn.textContent = 'Show more paintings';
+      }
+      if (countEl) {
+        countEl.textContent = shown >= total
+          ? 'Showing all ' + total + (total === 1 ? ' painting' : ' paintings')
+          : 'Showing ' + shown + ' of ' + total + ' paintings';
+      }
+    }
+
+    function draw() {
+      var list = matching();
+      grid.textContent = '';
+      visible = [];
+      var shown = appendCards(0, list);
+      lightbox.setItems(visible);
+      updateChrome(shown, list.length);
+    }
+
+    if (moreBtn) {
+      moreBtn.addEventListener('click', function () {
+        var list = matching();
+        var shown = appendCards(visible.length, list);
+        // The viewer needs to know about the newly added works too.
+        lightbox.setItems(visible);
+        updateChrome(shown, list.length);
+        // Move focus to the first new card so keyboard users are not dropped
+        // back at the top of the page.
+        var firstNew = grid.children[shown - Math.min(PAGE_SIZE, shown)];
+        if (firstNew) {
+          var btn = firstNew.querySelector('.artwork');
+          if (btn) btn.focus();
+        }
+      });
+    }
+
+    if (filterBar) {
+      var series = [];
+      all.forEach(function (p) {
+        if (p.series && series.indexOf(p.series) === -1) series.push(p.series);
+      });
+
+      // One group is not a choice, so only offer filters when there are two.
+      if (series.length > 1) {
+        filterBar.hidden = false;
+        ['all'].concat(series).forEach(function (name) {
+          var btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'filter-btn';
+          btn.textContent = name === 'all' ? 'All' : name;
+          btn.setAttribute('aria-pressed', String(name === 'all'));
+          btn.addEventListener('click', function () {
+            activeSeries = name;
+            filterBar.querySelectorAll('.filter-btn').forEach(function (b) {
+              b.setAttribute('aria-pressed', String(b === btn));
+            });
+            draw();
+          });
+          filterBar.appendChild(btn);
+        });
+      }
+    }
+
+    draw();
 
     grid.addEventListener('click', function (event) {
       var card = event.target.closest('.artwork');
       if (card) lightbox.open(Number(card.dataset.index), card);
     });
 
-    // Shared links like paintings.html#painting=blue-boats open that work directly.
+    // Shared links like paintings.html#painting=blue-boats open that work
+    // directly. The painting may sit beyond the first page, so keep adding
+    // pages until it is present rather than silently doing nothing.
     var match = /#painting=([\w-]+)/.exec(location.hash);
     if (match) {
-      var index = items.findIndex(function (p) { return p.slug === match[1]; });
-      if (index > -1) lightbox.open(index, null);
+      var list = matching();
+      var target = list.findIndex(function (p) { return p.slug === match[1]; });
+      if (target > -1) {
+        while (visible.length <= target && visible.length < list.length) {
+          appendCards(visible.length, list);
+        }
+        lightbox.setItems(visible);
+        updateChrome(visible.length, list.length);
+        lightbox.open(target, null);
+      }
     }
   }
 
   document.addEventListener('DOMContentLoaded', function () {
     var grid = document.querySelector('[data-gallery]');
     if (!grid) return;
+
+    // The home page reads a much smaller file holding only the paintings it
+    // shows, so it does not download the whole collection to display six.
+    DATA = grid.dataset.src || DATA;
 
     fetch(DATA, { cache: 'no-cache' })
       .then(function (response) {

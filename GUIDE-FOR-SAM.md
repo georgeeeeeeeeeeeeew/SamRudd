@@ -17,6 +17,16 @@ You'll see two things in the sidebar: **Paintings** and **Front page**.
 
 ---
 
+## Finding a painting
+
+Click **Paintings** and you get the full list. Once there are a lot of them:
+
+- **Search** by title at the top of the list
+- **Sort** by date or name
+- The newest paintings are at the top by default
+
+---
+
 ## Adding a painting
 
 1. Click **Paintings**
@@ -39,9 +49,23 @@ You'll see two things in the sidebar: **Paintings** and **Front page**.
    unsure about empty and it simply won't be shown. It's fine to come back and
    add them later.
 
+   **Date**: this decides where the painting appears in the gallery, newest
+   first. If you are not sure of the exact day, the first of the month is fine.
+   Anything without a date drops to the bottom of the page.
+
+   **Group**: Coastal or Landscape. Visitors use this to filter the gallery, so
+   it is worth setting.
+
    **Show on the front page**: tick this to include the painting in the small
    selection on the home page. About six looks best. Every painting appears in
    the gallery whether or not this is ticked.
+
+   **Keep at the top**: tick this to hold a painting at the very front of the
+   gallery whatever its date. Useful for leading with a favourite.
+
+   **Hide for now**: tick this while you are still working on an entry. Nothing
+   hidden appears anywhere on the website, so you can save half-finished work
+   and come back to it.
 
 4. Click **Save**
 
@@ -56,15 +80,24 @@ Give it a minute or two, then look at the website. The painting will be there.
 
 ## Changing the order
 
-The order in the list is the order visitors see. Drag a painting up or down using
-the handle at the left of its row. Most artists put newest work at the top.
+The gallery sorts itself: newest date first. So the usual way to move a painting
+is to correct its **Date**.
+
+If you want a particular painting to lead the gallery regardless of when it was
+painted, open it and tick **Keep at the top**. You can do that to more than one,
+and they will sit at the front in date order.
+
+There is no dragging. With a few hundred paintings, dragging one from the bottom
+to the top would be miserable, and a date is something you would want recorded
+anyway.
 
 ---
 
 ## Changing the big picture on the front page
 
 1. Click **Paintings** and find the painting you want
-2. Copy its **Web address name**, which is a short lowercase name like `blue-boats`
+2. Note its file name, shown at the top when you open it: a short lowercase name
+   like `blue-boats`
 3. Click **Front page** in the sidebar
 4. Paste it into **Large picture at the top**
 5. Save
@@ -102,7 +135,7 @@ Please correct any that are wrong.
 the moment. A few sentences in your own words about how and why you paint would be
 much better than anything anyone else could write. Send them to George.
 
-**Don't worry about the "Web address name"** unless you're changing the front
-page picture. It fills itself in. The only thing to avoid is editing it on a
-painting that's already been shared with someone, because that would break their
-link.
+**The file name** is created from the title when you first save a painting, and
+is what the web address uses. Renaming a painting later does not change it, which
+is deliberate: any link already shared keeps working. If you really need it
+changed, ask George.

@@ -24,24 +24,35 @@ python3 -m http.server 8123
 Sam saves in the CMS
         │
         ▼
-content/paintings.json      ← what she edits: title, photo, description
-images/uploads/…            ← the photograph she uploaded
+content/paintings/<slug>.md   ← one file per painting, what she edits
+images/uploads/…              ← the photograph she uploaded
         │
         │  GitHub Action: scripts/process_content.py
-        │    • names the painting (slug) from its title
+        │    • takes the slug from the filename
         │    • resizes the photo to 400/800/1200/1600 in JPEG + WebP
         │    • measures the results, tidies the upload away
+        │    • sorts: pinned first, then newest date, drafts dropped
         ▼
-content/gallery.json        ← generated; the file the website reads
+content/gallery.json          ← generated: every published painting
+content/featured.json         ← generated: only the home page's handful
         │
         │  GitHub Action: scripts/build_pages.py
         ▼
-index.html hero             ← rewritten between the `hero:*` comment markers
+index.html hero               ← rewritten between the `hero:*` comment markers
 ```
 
-Two files, deliberately: **`content/paintings.json` is Sam's**, and
-**`content/gallery.json` is the machine's**. Nothing generated appears in her
-editing form, and nothing she types can be clobbered by the Action.
+**One file per painting, not one file for all of them.** That is what makes the
+CMS list searchable and sortable, and it means saving one painting does not
+rewrite every other one. At a few hundred works a single file would be slow to
+load, slow to save, and produce a diff nobody can read.
+
+**Two generated files, not one.** The home page shows six paintings and has no
+business downloading several hundred records to find them, so it reads
+`featured.json` while the gallery reads `gallery.json`.
+
+Sam's files and the generated ones are kept strictly apart: nothing generated
+appears in her editing form, and nothing she types can be clobbered by the
+Action.
 
 The hero is the one thing not fetched at runtime. It is the largest image on the
 site and the first thing anyone sees, so it stays as real HTML. Drawing it with
@@ -51,8 +62,9 @@ that HTML in step, rewriting only what sits between the `hero:*:start` and
 
 ## Adding a painting yourself
 
-You don't need the CMS. Edit `content/paintings.json`, adding an entry with a
-`photo` pointing at any image on disk, then run:
+You don't need the CMS. Add a file to `content/paintings/`, copying the shape of
+an existing one, with `photo:` pointing at any image on disk. The filename
+becomes the web address. Then run:
 
 ```bash
 python3 scripts/process_content.py && python3 scripts/build_pages.py
@@ -82,10 +94,13 @@ These are the placeholders that need replacing. Nothing here blocks previewing t
 site locally, but all of it should be sorted before you point a domain at it.
 
 - [ ] **Painting titles are guesses.** The photographs are Sam's real work, but they
-      arrived with only filenames, so every `title` in `content/paintings.json` is a
+      arrived with only filenames, so every `title` in `content/paintings/` is a
       working title. One is untitled entirely (the camera called it `dsc04164`).
       `year`, `medium` and `dimensions` are left blank on purpose. The site omits
       whatever is empty, so they can be filled in gradually. Do not invent them.
+- [ ] **No painting has a date yet**, so the gallery is showing them in their
+      original order rather than newest first. Dates are what drive the ordering
+      now, so they are worth adding as Sam confirms them.
 - [ ] **Better photographs.** Most are only 480-615px wide, so they look soft when
       opened large. Some show the frame and the wall behind, others show bare canvas.
       Re-shooting the set consistently, at higher resolution, would improve this page
@@ -150,9 +165,10 @@ to name the problem rather than fail silently.
 index.html  paintings.html  about.html  contact.html  404.html
 .pages.yml                  what Sam sees in the CMS, labels, help text, fields
 GUIDE-FOR-SAM.md            her instructions, in plain English
-content/paintings.json      SOURCE: what Sam edits
+content/paintings/          SOURCE: one markdown file per painting, what Sam edits
 content/settings.json       SOURCE: hero picture and headline
-content/gallery.json        GENERATED: what the website reads, don't hand-edit
+content/gallery.json        GENERATED: every published painting, don't hand-edit
+content/featured.json       GENERATED: just the home page's selection
 css/style.css               colours, type and layout, all the design lives here
 js/gallery.js               builds the grids, runs the lightbox
 js/main.js                  header, mobile menu, scroll reveals

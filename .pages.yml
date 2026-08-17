@@ -4,14 +4,16 @@
 # the actual on-screen wording, so they are written for someone who has never
 # seen code.
 #
-# Note the split: the CMS edits content/paintings.json only. The generated
-# details (image widths, dimensions) live in content/gallery.json, which a
-# GitHub Action writes and the CMS never touches. Sam's form stays clean, and
-# nothing generated can be accidentally overwritten.
+# Paintings are a collection, one file per painting, rather than a single list.
+# That is what makes the list searchable and sortable, and it means saving one
+# painting does not rewrite every other one. It matters at a hundred paintings
+# and it would be painful to change later.
+#
+# The generated data the website reads (content/gallery.json and
+# content/featured.json) is written by a GitHub Action and is deliberately not
+# editable here, so nothing generated can be overwritten by hand.
 
 media:
-  # Where photographs land when Sam uploads them. The Action collects them from
-  # here, makes the web-sized versions, and clears the folder afterwards.
   name: uploads
   label: Photographs
   input: images/uploads
@@ -23,84 +25,118 @@ content:
   - name: paintings
     label: Paintings
     icon: image
-    type: file
-    path: content/paintings.json
-    format: json
+    type: collection
+    path: content/paintings
+    format: yaml-frontmatter
+    exclude: [README.md]
+
+    # The filename becomes the painting's web address, so it is set once from
+    # the title when the painting is created and then left alone. Changing it
+    # later would break any link already shared.
+    filename:
+      template: '{fields.title}.md'
+      field: create
+
+    view:
+      fields: [title, date, series, featured, draft]
+      primary: title
+      sort: [date, title, series]
+      search: [title, alt, series, year, medium]
+      default:
+        sort: date
+        order: desc
+
     fields:
-      - name: paintings
-        label: Paintings
-        type: object
+      - name: title
+        label: Title
+        type: string
+        required: true
+        description: The name of the painting, as you would like it shown.
+
+      - name: photo
+        label: Photograph
+        type: image
         description: >-
-          Every painting on the site. Use the handle at the left of a row to drag
-          it up or down. The order here is the order they appear in the gallery,
-          so newest work usually goes at the top.
-        list:
-          default: []
-          summary: '{fields.title}'
-        fields:
-          - name: title
-            label: Title
-            type: string
-            required: true
-            description: The name of the painting, as you would like it shown.
+          A photograph of the painting. Upload the biggest, sharpest version you
+          have. It is resized automatically for the web, so there is no need to
+          shrink it first. On a painting already on the site, leave this empty
+          unless you are replacing the photograph.
 
-          - name: photo
-            label: Photograph
-            type: image
-            description: >-
-              A photograph of the painting. Upload the biggest, sharpest version
-              you have. It is resized automatically for the web, so there is no
-              need to shrink it first. Leave this alone on paintings already on
-              the site unless you are replacing the photograph.
+      - name: alt
+        label: Description of the picture
+        type: text
+        required: true
+        description: >-
+          A sentence describing what the painting shows, for example "two blue
+          boats on pale sand, with cottages behind". This is read aloud to blind
+          visitors and is how the painting gets found in an image search, so
+          please describe the scene rather than repeating the title.
 
-          - name: alt
-            label: Description of the picture
-            type: text
-            required: true
-            description: >-
-              A sentence describing what the painting shows, for example "two blue boats on
-              pale sand, with cottages behind". This is read aloud to blind
-              visitors and is how the painting gets found in an image search, so
-              please describe the scene rather than repeating the title.
+      - name: date
+        label: Date
+        type: date
+        options:
+          format: yyyy-MM-dd
+        description: >-
+          Used to order the gallery, newest first. If you are not sure of the
+          exact day, the first of the month is fine. Paintings without a date
+          fall to the bottom.
 
-          - name: year
-            label: Year
-            type: string
-            description: The year it was painted. Leave empty if you would rather not say.
+      - name: pinned
+        label: Keep at the top
+        type: boolean
+        default: false
+        description: >-
+          Tick to hold this painting at the front of the gallery regardless of
+          its date. Useful for leading with a favourite. Everything else stays
+          in date order behind it.
 
-          - name: medium
-            label: Medium
-            type: string
-            description: For example "Oil on canvas". Leave empty if unsure, and it is simply left off.
+      - name: draft
+        label: Hide for now
+        type: boolean
+        default: false
+        description: >-
+          Tick to keep this painting off the website while you are still working
+          on it. Nothing hidden appears anywhere on the site.
 
-          - name: dimensions
-            label: Size
-            type: string
-            description: For example "60 x 80 cm". Leave empty if unsure.
+      - name: featured
+        label: Show on the front page
+        type: boolean
+        default: false
+        description: >-
+          Tick to include this painting in the small selection on the home page.
+          Around six works well; every painting appears in the gallery either way.
 
-          - name: series
-            label: Group
-            type: select
-            options:
-              values: [Coastal, Landscape]
-            description: Roughly what kind of painting it is. Not shown on the site yet.
+      - name: series
+        label: Group
+        type: select
+        options:
+          values: [Coastal, Landscape]
+        description: >-
+          Visitors can use this to filter the gallery, so it is worth setting.
+          Leave empty if a painting fits neither.
 
-          - name: featured
-            label: Show on the front page
-            type: boolean
-            default: false
-            description: >-
-              Tick to include this painting in the selection on the home page.
-              Around six works well; every painting appears in the gallery either
-              way.
+      - name: year
+        label: Year
+        type: string
+        description: The year it was painted. Leave empty if you would rather not say.
 
-          - name: slug
-            label: Web address name
-            type: string
-            description: >-
-              Filled in automatically from the title the first time a painting is
-              saved. Best left alone afterwards, because changing it breaks any link to
-              this painting that has already been shared.
+      - name: medium
+        label: Medium
+        type: string
+        description: For example "Oil on canvas". Leave empty if unsure, and it is simply left off.
+
+      - name: dimensions
+        label: Size
+        type: string
+        description: For example "60 x 80 cm". Leave empty if unsure.
+
+      - name: position
+        label: Manual order
+        type: number
+        description: >-
+          Only used for paintings with no date, to keep them in a sensible order.
+          You can ignore this.
 
   - name: settings
     label: Front page
@@ -114,9 +150,9 @@ content:
         type: string
         required: true
         description: >-
-          The "Web address name" of the painting to show large across the top of
-          the home page. Copy it from the painting's entry under Paintings. For
-          example, blue-boats. A wide, landscape-shaped painting works best here,
+          The web address name of the painting to show large across the top of
+          the home page. It is the painting's filename without the .md, for
+          example blue-boats. A wide, landscape-shaped painting works best,
           because the picture is cropped to a broad band.
 
       - name: heroHeadingLine1

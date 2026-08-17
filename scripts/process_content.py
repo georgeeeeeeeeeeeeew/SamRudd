@@ -1,15 +1,25 @@
 #!/usr/bin/env python3
 """Turn what the CMS saved into what the website needs.
 
-Sam edits `content/paintings.json` through Pages CMS: a title, a photograph, a
-description, and so on. She never sees slugs, pixel widths or file paths. This
-script fills that gap, and runs automatically in GitHub Actions whenever she
-saves. For each painting it:
+Sam edits one file per painting in `content/paintings/` through Pages CMS: a
+title, a photograph, a description, a date. She never sees slugs, pixel widths
+or file paths. This script fills that gap, and runs automatically in GitHub
+Actions whenever she saves. For each painting it:
 
-  1. gives it a slug, derived from the title, the first time it is seen
+  1. takes the slug from the filename, so the web address is stable
   2. resizes any newly uploaded photograph into images/paintings/<slug>/
   3. measures the images and records their real dimensions
-  4. writes content/gallery.json, the file the website actually reads
+
+It then writes two files:
+
+  content/gallery.json    every published painting, for the gallery page
+  content/featured.json   only the handful marked for the home page
+
+Two files rather than one because the home page shows six paintings and should
+not have to download the details of several hundred to find them.
+
+Order is pinned paintings first, then newest date first, then anything undated
+by its manual position. Drafts are left out entirely.
 
 Paintings added before the CMS existed have no `photo`, because their originals
 were never committed. Those keep whatever images are already on disk, so the
@@ -26,14 +36,15 @@ from __future__ import annotations
 import json
 import re
 import sys
-import unicodedata
 from pathlib import Path
 
+import yaml
 from PIL import Image
 
 ROOT = Path(__file__).resolve().parent.parent
-SOURCE = ROOT / "content" / "paintings.json"
-BUILT = ROOT / "content" / "gallery.json"
+SOURCE_DIR = ROOT / "content" / "paintings"
+GALLERY = ROOT / "content" / "gallery.json"
+FEATURED = ROOT / "content" / "featured.json"
 PAINTINGS_DIR = ROOT / "images" / "paintings"
 UPLOADS_DIR = ROOT / "images" / "uploads"
 
@@ -46,25 +57,38 @@ check_only = "--check" in sys.argv
 problems: list[str] = []
 
 
-def slugify(text: str) -> str:
-    text = unicodedata.normalize("NFKD", text).encode("ascii", "ignore").decode()
-    text = re.sub(r"[^\w\s-]", "", text).strip().lower()
-    text = re.sub(r"[\s_-]+", "-", text)
-    return text or "painting"
+def read_frontmatter(path: Path) -> dict:
+    """Parse the YAML block between the leading --- fences."""
+    text = path.read_text()
+    match = re.match(r"^---\n(.*?)\n---\s*(.*)$", text, re.S)
+    if not match:
+        problems.append(f"{path.name}: no frontmatter block, skipped")
+        return {}
+    try:
+        data = yaml.safe_load(match.group(1)) or {}
+    except yaml.YAMLError as exc:
+        problems.append(f"{path.name}: frontmatter is not valid YAML, {exc}")
+        return {}
+    if not isinstance(data, dict):
+        problems.append(f"{path.name}: frontmatter is not a set of fields, skipped")
+        return {}
+    data["_body"] = match.group(2).strip()
+    return data
 
 
-def unique_slug(base: str, taken: set[str]) -> str:
-    slug, n = base, 2
-    while slug in taken:
-        slug, n = f"{base}-{n}", n + 1
-    return slug
+def write_frontmatter(path: Path, data: dict) -> None:
+    body = data.pop("_body", "")
+    text = "---\n" + yaml.safe_dump(data, sort_keys=False, allow_unicode=True) + "---\n"
+    if body:
+        text += body + "\n"
+    path.write_text(text)
 
 
 def resolve_upload(photo: str) -> Path | None:
     """The CMS may store the path with or without a leading slash."""
     if not photo:
         return None
-    candidate = ROOT / photo.lstrip("/")
+    candidate = ROOT / str(photo).lstrip("/")
     return candidate if candidate.is_file() else None
 
 
@@ -118,97 +142,111 @@ def measure_existing(slug: str) -> tuple[int, int, list[int]] | None:
 
 
 def main() -> int:
-    if not SOURCE.is_file():
-        print(f"error: {SOURCE.relative_to(ROOT)} is missing", file=sys.stderr)
-        return 1
-    try:
-        source = json.loads(SOURCE.read_text())
-    except json.JSONDecodeError as exc:
-        print(f"error: content/paintings.json is not valid JSON, {exc}", file=sys.stderr)
+    if not SOURCE_DIR.is_dir():
+        print(f"error: {SOURCE_DIR.relative_to(ROOT)} is missing", file=sys.stderr)
         return 1
 
-    entries = source.get("paintings") or []
-    taken = {e["slug"] for e in entries if e.get("slug")}
-    built: list[dict] = []
-    source_changed = False
+    files = sorted(SOURCE_DIR.glob("*.md"))
+    if not files:
+        print(f"error: no paintings found in {SOURCE_DIR.relative_to(ROOT)}", file=sys.stderr)
+        return 1
 
-    for position, entry in enumerate(entries, start=1):
-        title = (entry.get("title") or "").strip()
-        if not title:
-            problems.append(f"painting #{position} has no title, skipped")
+    collected: list[dict] = []
+    drafts = 0
+
+    for path in files:
+        data = read_frontmatter(path)
+        if not data:
             continue
 
-        slug = (entry.get("slug") or "").strip()
-        if not slug:
-            slug = unique_slug(slugify(title), taken)
-            taken.add(slug)
-            if not check_only:
-                entry["slug"] = slug
-            source_changed = True
-            print(f"  named  {title!r} -> {slug}")
+        slug = path.stem
+        title = str(data.get("title") or "").strip()
+        if not title:
+            problems.append(f"{path.name}: no title, skipped")
+            continue
 
-        upload = resolve_upload(entry.get("photo", ""))
+        if data.get("draft"):
+            drafts += 1
+            continue
+
+        upload = resolve_upload(data.get("photo", ""))
         if upload is not None:
             if check_only:
                 print(f"  would resize {upload.name} for {slug}")
                 measured = measure_existing(slug)
             else:
-                w, h, widths = build_variants(upload, slug)
-                measured = (w, h, widths)
-                upload.unlink()               # the original is kept in git history
-                entry["photo"] = ""           # the job is done; clear the field
-                source_changed = True
-                print(f"  resized {upload.name} -> {slug} ({len(widths)} widths)")
+                measured = build_variants(upload, slug)
+                upload.unlink()          # the original stays in git history
+                data["photo"] = ""       # the job is done, clear the field
+                write_frontmatter(path, dict(data))
+                print(f"  resized {upload.name} -> {slug} ({len(measured[2])} widths)")
         else:
-            if entry.get("photo"):
-                problems.append(
-                    f"{title!r}: photograph {entry['photo']!r} was not found"
-                )
+            if data.get("photo"):
+                problems.append(f"{title}: photograph {data['photo']!r} was not found")
             measured = measure_existing(slug)
 
         if measured is None:
-            problems.append(f"{title!r}: no images yet, add a photograph in the CMS")
+            problems.append(f"{title}: no images yet, add a photograph in the CMS")
             continue
 
         width, height, widths = measured
-        built.append({
+        alt = str(data.get("alt") or "").strip()
+        if not alt:
+            problems.append(f"{title}: no description, so the title is read aloud instead")
+
+        collected.append({
             "slug": slug,
             "title": title,
-            "year": str(entry.get("year") or ""),
-            "medium": entry.get("medium") or "",
-            "dimensions": entry.get("dimensions") or "",
-            "series": entry.get("series") or "",
-            "featured": bool(entry.get("featured")),
+            "year": str(data.get("year") or ""),
+            "medium": str(data.get("medium") or ""),
+            "dimensions": str(data.get("dimensions") or ""),
+            "series": str(data.get("series") or ""),
+            "featured": bool(data.get("featured")),
             "width": width,
             "height": height,
             "widths": widths,
-            "alt": (entry.get("alt") or "").strip() or title,
+            "alt": alt or title,
+            # Underscored keys are for sorting only and are stripped before writing.
+            "_pinned": bool(data.get("pinned")),
+            "_date": str(data.get("date") or ""),
+            "_position": int(data.get("position") or 0),
         })
-        if not (entry.get("alt") or "").strip():
-            problems.append(f"{title!r}: no description, so the title is being read aloud instead")
+
+    # Three passes, relying on Python's sort being stable so each one keeps the
+    # order the previous established. Applied least significant first:
+    #   1. manual position, which only matters for undated paintings
+    #   2. date, newest first. Dates are yyyy-MM-dd strings so they sort
+    #      correctly as text, and undated ones are "" so they fall to the bottom
+    #   3. pinned, which overrides everything
+    collected.sort(key=lambda p: p["_position"] or 0)
+    collected.sort(key=lambda p: p["_date"], reverse=True)
+    collected.sort(key=lambda p: 0 if p["_pinned"] else 1)
+
+    published = [{k: v for k, v in p.items() if not k.startswith("_")} for p in collected]
+    featured = [p for p in published if p["featured"]]
 
     if check_only:
-        print(f"\n{len(built)} painting(s) would be published")
+        print(f"\n{len(published)} painting(s) would be published, {drafts} hidden")
+        print(f"{len(featured)} on the home page")
         for p in problems:
             print(f"  ! {p}")
         return 0
 
-    new_built = json.dumps({"paintings": built}, indent=2) + "\n"
-    built_changed = not BUILT.is_file() or BUILT.read_text() != new_built
-    if built_changed:
-        BUILT.write_text(new_built)
+    wrote = []
+    for target, payload in ((GALLERY, published), (FEATURED, featured)):
+        text = json.dumps({"paintings": payload}, indent=2) + "\n"
+        if not target.is_file() or target.read_text() != text:
+            target.write_text(text)
+            wrote.append(target.name)
 
-    if source_changed:
-        SOURCE.write_text(json.dumps(source, indent=2) + "\n")
-
-    # Leave the uploads folder tidy so it does not fill up with used photographs.
     if UPLOADS_DIR.is_dir():
         for leftover in UPLOADS_DIR.iterdir():
             if leftover.is_file() and leftover.name != ".gitkeep":
                 problems.append(f"unused upload left in images/uploads: {leftover.name}")
 
-    print(f"\n{len(built)} painting(s) published"
-          f"{', content/gallery.json updated' if built_changed else ', no change'}")
+    print(f"\n{len(published)} painting(s) published, {drafts} hidden, "
+          f"{len(featured)} on the home page")
+    print("updated: " + (", ".join(wrote) if wrote else "nothing, already current"))
     for p in problems:
         print(f"  ! {p}")
     return 0

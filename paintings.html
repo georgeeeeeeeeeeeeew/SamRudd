@@ -62,7 +62,14 @@
   </section>
 
   <section class="shell" style="padding-bottom: var(--section-y)" aria-label="All paintings">
-    <ul class="gallery-grid" data-gallery="all"></ul>
+    <div class="gallery-filters" data-gallery-filters hidden aria-label="Filter paintings by group"></div>
+
+    <ul class="gallery-grid" data-gallery="all" data-paged="true"></ul>
+
+    <div class="gallery-more">
+      <p class="gallery-count" data-gallery-count role="status" aria-live="polite"></p>
+      <button class="btn btn--quiet" type="button" data-gallery-more hidden>Show more paintings</button>
+    </div>
     <noscript>
       <p class="lede" style="margin-top: var(--space-4)">
         The gallery needs JavaScript to display. Please

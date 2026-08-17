@@ -603,6 +603,69 @@ a {
   }
 }
 
+/* --- Gallery filters and paging ------------------------------------------- */
+
+.gallery-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  margin-bottom: var(--space-4);
+}
+
+.filter-btn {
+  padding: 0.45rem 1rem;
+  background: none;
+  border: 1px solid var(--rule);
+  border-radius: 100px;
+  font-size: 0.8125rem;
+  letter-spacing: 0.04em;
+  color: var(--ink-soft);
+  cursor: pointer;
+  transition: color 0.2s var(--ease), border-color 0.2s var(--ease),
+    background 0.2s var(--ease);
+}
+
+.filter-btn:hover {
+  color: var(--ink);
+  border-color: var(--ink-faint);
+}
+
+/* aria-pressed carries the state, so the styling follows it rather than a
+   separate class that could drift out of step with what is announced. */
+.filter-btn[aria-pressed='true'] {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--paper);
+}
+
+.gallery-more {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  margin-top: var(--space-6);
+  text-align: center;
+}
+
+.gallery-count {
+  margin: 0;
+  font-size: 0.8125rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.btn--quiet {
+  background: none;
+  color: var(--ink);
+  border: 1px solid var(--ink);
+}
+
+.btn--quiet:hover {
+  background: var(--ink);
+  color: var(--paper);
+}
+
 /* --- Gallery grid --------------------------------------------------------- */
 
 .gallery-grid {
