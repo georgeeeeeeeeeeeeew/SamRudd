@@ -26,6 +26,21 @@ TARGETS = ["index.html", "paintings.html", "about.html", "contact.html",
 # Any absolute URL pointing at the site, whatever domain it currently names.
 URL = re.compile(r"https://(?:www\.)?[a-z0-9-]+(?:\.[a-z0-9-]+)+", re.I)
 
+# Addresses that are somebody else's and must never be rewritten. sanity.io is
+# on this list because it was not, once: the script quietly pointed the gallery's
+# structured data at our own domain instead of the API, which fetches nothing.
+# An allowlist would be safer still, but the whole point is that our own domain
+# is the thing being changed, so it cannot be named in advance.
+EXTERNAL = (
+    "schema.org", "github.com", "github.io", "instagram.com",
+    "sanity.io", "sanity.studio", "vercel.app", "vercel-dns.com",
+    "esm.sh", "googleapis.com", "gstatic.com",
+)
+
+
+def is_external(url: str) -> bool:
+    return any(host in url for host in EXTERNAL)
+
 
 def current() -> set[str]:
     found: set[str] = set()
@@ -33,8 +48,7 @@ def current() -> set[str]:
         path = ROOT / name
         if path.is_file():
             for match in URL.findall(path.read_text()):
-                # Ignore links out to other people's sites.
-                if "schema.org" in match or "github.com" in match or "instagram.com" in match:
+                if is_external(match):
                     continue
                 found.add(match)
     return found
@@ -74,7 +88,7 @@ def main() -> int:
 
         def swap(match: re.Match) -> str:
             url = match.group(0)
-            if "schema.org" in url or "github.com" in url or "instagram.com" in url:
+            if is_external(url):
                 return url
             return new
 

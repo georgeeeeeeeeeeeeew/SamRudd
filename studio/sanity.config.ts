@@ -5,10 +5,9 @@ import {visionTool} from '@sanity/vision'
 import {orderableDocumentListDeskItem} from '@sanity/orderable-document-list'
 import {schemaTypes} from './schemaTypes'
 
-/* Where the Preview tab points. The site reads published content live, so the
-   preview is simply the real website in a panel: publish, then reload it and
-   the change is there. Change this when the custom domain goes live. */
-const SITE_URL = 'https://georgeeeeeeeeeeeeew.github.io/SamRudd/'
+/* Where the Preview tab points: the live site. Must be the full URL including
+   any path, not just the host, or the path is dropped. */
+const SITE_URL = 'https://sam-rudd.moveconsultingpartners.com/'
 
 /* Pages that exist once rather than as a list. Each is opened directly from the
    sidebar instead of showing a list containing a single item, and each has its
