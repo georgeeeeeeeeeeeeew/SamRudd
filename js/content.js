@@ -173,8 +173,11 @@ window.SamRudd = (function () {
      is what produced nine "Coastal" filter buttons instead of one. */
   function clean(value) {
     if (typeof value !== 'string') return value;
-    // Unicode tag characters, U+E0000 to U+E007F, plus a zero-width space.
-    return value.replace(/[\u{E0000}-\u{E007F}\u200B]/gu, '');
+    /* Zero-width joiners, non-joiners and the byte order mark. Confirmed by
+       counting what actually appears in an encoded string: U+200C, U+200D and
+       U+FEFF. It is not the Unicode tag block, which is what a first guess
+       suggests and which strips nothing at all. */
+    return value.replace(/[\u200B-\u200D\uFEFF]/g, '');
   }
 
   /* Sanity resizes on request, so a width is just a parameter on the URL. */
