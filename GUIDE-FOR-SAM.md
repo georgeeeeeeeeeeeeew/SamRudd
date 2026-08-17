@@ -33,13 +33,9 @@ inside the page, so you can check how something looks without leaving.
 outline; click it and the right box opens beside the preview, already scrolled
 to the thing you clicked. It is often quicker than finding the page in the list.
 
-**The preview updates as you type.** You do not need to publish to see how
-something looks, and you do not need to reload. Change a title and it changes on
-the page a moment later.
-
-**Publishing is what puts it on the real website.** Until you press Publish, only
-you can see the change: the preview shows your unpublished work, and visitors
-carry on seeing the last thing you published.
+**The preview shows the published website.** So the way to see a change is to
+press **Publish**, then reload the preview: it appears within a second or two.
+It does not show work you have not published yet.
 
 ---
 
@@ -88,10 +84,9 @@ There's a search box at the top, and you can sort by date or by name.
 
 4. Click **Publish**
 
-**Saving and publishing are different.** Sanity saves as you type, and the
-preview shows that straight away, but the real website only changes once you
-press **Publish**. If something looks right in the preview and wrong on the
-site, that is almost always why.
+**Saving and publishing are different.** Sanity saves as you type so nothing is
+lost, but nothing reaches the website, or the preview, until you press
+**Publish**. If a change is not showing up anywhere, that is almost always why.
 
 ---
 

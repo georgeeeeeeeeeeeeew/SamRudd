@@ -42,13 +42,21 @@ characters; `js/visual-editing.js` then loads the overlays that read them. Both
 are pinned and requested with `?bundle`, because unbundled esm.sh serves them as
 200+ modules and the preview sat blank for twenty seconds.
 
-In the preview the client reads the `drafts` perspective with `withCredentials`,
-so unpublished edits show and Publish becomes purely the act of going live. That
-needs the site's origin to be allowed to send credentials, which is set on the
-Sanity project. A single `listen` subscription watches the dataset and asks each
-section to redraw, debounced, since typing produces an event per keystroke. If
-the session has expired the drafts request is refused and it quietly falls back
-to published rather than showing a broken page.
+The preview reads **published** content, and a `listen` subscription redraws each
+section when anything is published, debounced.
+
+It does not show unpublished drafts, and the reason is worth recording so nobody
+tries the same shortcut again. Reading drafts requires an authenticated request.
+The preview is an iframe on our own domain calling Sanity, which is cross-site,
+and browsers will not attach the Sanity session cookie in that position. The
+request arrives unauthenticated and every draft query returns empty. It fails
+quietly: queries with a fallback still render, and the ones without simply go
+blank, which is how the hero disappeared.
+
+Doing it properly means the Studio fetching drafts itself, where it is
+first-party, and passing results into the frame over its own channel. That is
+what Sanity's loaders (`@sanity/core-loader`) are for, and it is a larger piece
+of work than it looks.
 
 None of it runs for visitors: `SamRudd.inPreview` is false outside the studio
 frame, so no CDN request is made and no markers appear in the text. Verified by

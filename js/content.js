@@ -75,14 +75,23 @@ window.SamRudd = (function () {
             projectId: PROJECT,
             dataset: 'production',
             apiVersion: '2024-01-01',
-            useCdn: false,          // a preview should never lag behind
-            /* Unpublished work, so the preview shows what Sam is typing rather
-               than what she last published. Reading drafts needs her to be
-               signed in, which is what withCredentials carries: the Sanity
-               session cookie. It only works because the site's origin is
-               allowed to send credentials, and only she has that cookie. */
-            perspective: 'drafts',
-            withCredentials: true,
+            useCdn: false,             // a preview should never lag behind
+            /* Published content, deliberately.
+
+               Showing unpublished drafts here needs the request to be
+               authenticated, and the preview is an iframe on our own domain
+               calling Sanity, which is a cross-site request. Browsers do not
+               send the Sanity session cookie in that position, so the request
+               arrives unauthenticated and every draft query comes back empty.
+               That is what left the hero blank: paintings have a fallback,
+               siteSettings does not, so the hero simply had no data.
+
+               Doing drafts properly means the Studio fetching them itself and
+               passing the results into the frame, which is what Sanity's
+               loaders are for and is a larger piece of work. Until then the
+               preview shows the published site, which is honest and which
+               always works. */
+            perspective: 'published',
             stega: {enabled: true, studioUrl: STUDIO}
           });
         })
@@ -109,13 +118,8 @@ window.SamRudd = (function () {
     if (!clientReady) return plainFetch(groq);
     return clientReady.then(function (client) {
       if (!client) return plainFetch(groq);
-      /* Reading drafts only works for someone signed in to Sanity. Inside the
-         Studio that is always true, but if the session has expired, or the page
-         is opened outside the Studio with the preview parameters on the URL,
-         the request is refused. Fall back to published rather than showing a
-         broken page. */
       return client.fetch(groq).catch(function (e) {
-        if (window.console) console.warn('Preview: cannot read drafts, showing published instead', e);
+        if (window.console) console.warn('Preview: query failed, falling back', e);
         return plainFetch(groq);
       });
     });
