@@ -42,6 +42,19 @@ characters; `js/visual-editing.js` then loads the overlays that read them. Both
 are pinned and requested with `?bundle`, because unbundled esm.sh serves them as
 200+ modules and the preview sat blank for twenty seconds.
 
+In the preview the client reads the `drafts` perspective with `withCredentials`,
+so unpublished edits show and Publish becomes purely the act of going live. That
+needs the site's origin to be allowed to send credentials, which is set on the
+Sanity project. A single `listen` subscription watches the dataset and asks each
+section to redraw, debounced, since typing produces an event per keystroke. If
+the session has expired the drafts request is refused and it quietly falls back
+to published rather than showing a broken page.
+
+**Worth removing later:** credentials are allowed on
+`https://georgeeeeeeeeeeeeew.github.io`, an origin shared by every GitHub Pages
+project on that account. Drop it with `npx sanity cors delete` once Pages is off
+and the custom domain is live.
+
 None of it runs for visitors: `SamRudd.inPreview` is false outside the studio
 frame, so no CDN request is made and no markers appear in the text. Verified by
 loading the site normally and counting both.

@@ -48,6 +48,7 @@
     if (el && value) el.textContent = value;
   }
 
+  function draw() {
   var fetchHero = (window.SamRudd && window.SamRudd.query)
     ? window.SamRudd.query(GROQ)
     : fetch(API + '?query=' + encodeURIComponent(GROQ), {cache: 'no-cache'})
@@ -81,6 +82,10 @@
 
       if (p.lqip) media.style.background = 'url(' + p.lqip + ') center / cover no-repeat';
 
+      // Redrawing must replace the painting, not stack another on top of it.
+      var existing = media.querySelector('picture');
+      if (existing) existing.remove();
+
       var img = document.createElement('img');
       img.src = p.url + '?w=1600&q=80&auto=format';
       img.srcset = srcset(p);
@@ -101,4 +106,11 @@
     .catch(function (error) {
       if (window.console) console.error('Could not load the hero from Sanity:', error);
     });
+  }
+
+  draw();
+
+  if (window.SamRudd && window.SamRudd.onContentChange) {
+    window.SamRudd.onContentChange(draw);
+  }
 })();

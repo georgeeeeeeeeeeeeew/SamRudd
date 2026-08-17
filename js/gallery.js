@@ -441,13 +441,29 @@
     // full download down to six.
     var groq = grid.dataset.gallery === 'featured' ? QUERIES.featured : QUERIES.all;
 
-    query(groq)
-      .then(function (paintings) {
-        if (!paintings.length) throw new Error('no paintings returned');
-        render(grid, paintings);
-      })
-      .catch(function (error) {
-        failed(grid, error);
+    function load() {
+      return query(groq)
+        .then(function (paintings) {
+          if (!paintings.length) throw new Error('no paintings returned');
+          grid.textContent = '';
+          render(grid, paintings);
+        })
+        .catch(function (error) {
+          failed(grid, error);
+        });
+    }
+
+    load();
+
+    /* In the preview, redraw when anything changes. render() builds a fresh
+       lightbox each call, so drop the previous one first or they accumulate,
+       each with its own keydown listener. */
+    if (window.SamRudd && window.SamRudd.onContentChange) {
+      window.SamRudd.onContentChange(function () {
+        var stale = document.querySelector('.lightbox');
+        if (stale && stale.dataset.open !== 'true') stale.remove();
+        load();
       });
+    }
   });
 })();

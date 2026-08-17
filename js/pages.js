@@ -332,6 +332,13 @@
     contact: renderContact
   };
 
-  if (routes[page]) routes[page]();
-  renderFooter();
+  function drawEverything() {
+    if (routes[page]) routes[page]();
+    renderFooter();
+  }
+
+  drawEverything();
+
+  // In the preview, redraw whenever Sam changes anything.
+  if (S.onContentChange) S.onContentChange(drawEverything);
 })();

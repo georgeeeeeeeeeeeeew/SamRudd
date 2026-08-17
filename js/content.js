@@ -48,8 +48,14 @@ window.SamRudd = (function () {
             projectId: PROJECT,
             dataset: 'production',
             apiVersion: '2024-01-01',
-            useCdn: false,             // a preview should never lag behind
-            perspective: 'published',  // show what visitors actually see
+            useCdn: false,          // a preview should never lag behind
+            /* Unpublished work, so the preview shows what Sam is typing rather
+               than what she last published. Reading drafts needs her to be
+               signed in, which is what withCredentials carries: the Sanity
+               session cookie. It only works because the site's origin is
+               allowed to send credentials, and only she has that cookie. */
+            perspective: 'drafts',
+            withCredentials: true,
             stega: {enabled: true, studioUrl: STUDIO}
           });
         })
@@ -75,7 +81,55 @@ window.SamRudd = (function () {
   function query(groq) {
     if (!clientReady) return plainFetch(groq);
     return clientReady.then(function (client) {
-      return client ? client.fetch(groq) : plainFetch(groq);
+      if (!client) return plainFetch(groq);
+      /* Reading drafts only works for someone signed in to Sanity. Inside the
+         Studio that is always true, but if the session has expired, or the page
+         is opened outside the Studio with the preview parameters on the URL,
+         the request is refused. Fall back to published rather than showing a
+         broken page. */
+      return client.fetch(groq).catch(function (e) {
+        if (window.console) console.warn('Preview: cannot read drafts, showing published instead', e);
+        return plainFetch(groq);
+      });
+    });
+  }
+
+  /* --- Live updates, in the preview only ---------------------------------
+
+     Anything drawn from Sanity registers how to draw itself again. A single
+     subscription watches the dataset and, when anything changes, asks them all
+     to redraw. Debounced, because typing produces an event per keystroke and
+     redrawing on each one would be wasteful and visibly jumpy. */
+
+  var redrawers = [];
+  var redrawTimer = null;
+
+  function onContentChange(fn) {
+    if (typeof fn === 'function') redrawers.push(fn);
+  }
+
+  function redrawAll() {
+    redrawers.forEach(function (fn) {
+      try { fn(); } catch (e) {
+        if (window.console) console.error('Preview: a section failed to redraw', e);
+      }
+    });
+  }
+
+  if (inPreview && clientReady) {
+    clientReady.then(function (client) {
+      if (!client) return;
+      client
+        .listen('*', {}, {includeResult: false, visibility: 'query'})
+        .subscribe({
+          next: function () {
+            clearTimeout(redrawTimer);
+            redrawTimer = setTimeout(redrawAll, 300);
+          },
+          error: function (e) {
+            if (window.console) console.error('Preview: live updates stopped', e);
+          }
+        });
     });
   }
 
@@ -219,6 +273,7 @@ window.SamRudd = (function () {
   return {
     inPreview: inPreview,
     query: query,
+    onContentChange: onContentChange,
     imageUrl: imageUrl,
     srcset: srcset,
     renderRichText: renderRichText,
