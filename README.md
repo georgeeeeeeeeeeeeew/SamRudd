@@ -50,11 +50,6 @@ section to redraw, debounced, since typing produces an event per keystroke. If
 the session has expired the drafts request is refused and it quietly falls back
 to published rather than showing a broken page.
 
-**Worth removing later:** credentials are allowed on
-`https://georgeeeeeeeeeeeeew.github.io`, an origin shared by every GitHub Pages
-project on that account. Drop it with `npx sanity cors delete` once Pages is off
-and the custom domain is live.
-
 None of it runs for visitors: `SamRudd.inPreview` is false outside the studio
 frame, so no CDN request is made and no markers appear in the text. Verified by
 loading the site normally and counting both.
@@ -127,7 +122,7 @@ site locally, but all of it should be sorted before you point a domain at it.
 - [ ] **The email address** `hello@samrudd.co.uk` appears on the contact page and in
       its footer. Change it to the real one.
 - [ ] **The Instagram link** on the contact page points at instagram.com generally.
-- [x] **The domain** is set to `https://samrudd.moveconsultingpartners.com` across
+- [x] **The domain** is set to `https://sam-rudd.moveconsultingpartners.com` across
       the canonical tags, `og:` tags, `sitemap.xml` and `robots.txt`. If it ever
       moves, for instance to a domain of Sam's own, do not edit those by hand, run
       `python3 scripts/set_domain.py newdomain.com` so they cannot drift apart.
@@ -247,15 +242,15 @@ These steps need your accounts, so they have to be done by you:
    and sitemap all agree:
 
    ```bash
-   python3 scripts/set_domain.py samrudd.moveconsultingpartners.com
+   python3 scripts/set_domain.py sam-rudd.moveconsultingpartners.com
    ```
 
    Commit and push. Use the exact form you chose in step 2, with or without the
    `www`.
 
-5. **Turn GitHub Pages off** in the repository settings, under *Pages*. Leaving
-   both live means two copies of the same site on different addresses, which
-   splits search ranking between them.
+5. **GitHub Pages is off.** It was unpublished once the custom domain went live,
+   so there is only one address. Note the setting is the *Unpublish site* button
+   on that page; the old "Source: None" option no longer exists.
 
 After this, every push to `main` deploys automatically, including the commits
 the content workflow makes when Sam adds a painting. Nothing else changes: Pages
