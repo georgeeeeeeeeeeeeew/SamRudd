@@ -43,6 +43,16 @@ export default defineConfig({
     visionTool(),
   ],
 
+  /* Vision is a query playground: useful for debugging, meaningless to anyone
+     editing the site, and alarming if you do not know what it is. It stays for
+     administrators and is hidden from everyone else, so Sam sees only the
+     content. Filtering here rather than dropping the plugin keeps it available
+     without a redeploy when something needs looking at. */
+  tools: (prev, {currentUser}) => {
+    const isAdmin = (currentUser?.roles || []).some((role) => role.name === 'administrator')
+    return isAdmin ? prev : prev.filter((tool) => tool.name !== 'vision')
+  },
+
   schema: {
     types: schemaTypes,
     templates: (prev) =>

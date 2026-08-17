@@ -120,6 +120,11 @@ Everything is set up. What remains needs your Sanity account:
    nothing is installed on her machine.
 3. Give her [GUIDE-FOR-SAM.md](GUIDE-FOR-SAM.md).
 
+Invite her as an **Editor**, not an Administrator. Editors do not see the Vision
+tab, which is a query playground that is useful for debugging and confusing to
+everyone else. `sanity.config.ts` filters it by role rather than removing it, so
+it is still there for you.
+
 The free plan covers 20 users, 10,000 documents and 100GB of images, which is far
 more than this site will use.
 
