@@ -41,7 +41,7 @@
 </script>
 </head>
 
-<body>
+<body data-page="home">
 <a class="skip-link" href="#main">Skip to content</a>
 
 <header class="site-header">
@@ -83,9 +83,9 @@
 
   <section class="section shell" aria-labelledby="featured-heading">
     <div class="section-head" data-reveal>
-      <span class="eyebrow">Selected work</span>
-      <h2 id="featured-heading">Featured</h2>
-      <p>A selection of work inspired by the colours, textures and atmosphere of the British coast and countryside.</p>
+      <span class="eyebrow" data-featured-eyebrow>Selected work</span>
+      <h2 id="featured-heading" data-featured-heading>Featured</h2>
+      <p data-featured-intro>A selection of work inspired by the colours, textures and atmosphere of the British coast and countryside.</p>
     </div>
 
     <ul class="gallery-grid" data-gallery="featured" data-limit="6" data-reveal></ul>
@@ -98,7 +98,7 @@
   <section class="section shell" aria-labelledby="intro-heading">
     <hr class="rule" style="margin-bottom: var(--section-y)">
     <div class="split split--portrait" data-reveal>
-      <div class="split__media">
+      <div class="split__media" data-about-image>
         <picture>
           <source type="image/webp" sizes="(max-width: 52rem) 92vw, (max-width: 82rem) 40vw, 481px" srcset="
             images/paintings/saint-sand-sea/saint-sand-sea-400.webp 400w,
@@ -114,9 +114,9 @@
       </div>
       <div class="split__body">
         <span class="eyebrow">About</span>
-        <h2 id="intro-heading">About the artist</h2>
-        <p class="lede">Sam Rudd is a contemporary British landscape painter, drawing inspiration from the coast, countryside and places encountered along the way.</p>
-        <p>Her paintings explore the shapes, colours and atmosphere of the landscape, from boats resting on the shore to distant churches, open fields and weathered hillsides. Working with loose marks and layered colour, each painting captures a sense of place without describing every detail.</p>
+        <h2 id="intro-heading" data-about-heading>About the artist</h2>
+        <p class="lede" data-about-lede>Sam Rudd is a contemporary British landscape painter, drawing inspiration from the coast, countryside and places encountered along the way.</p>
+        <p data-about-body>Her paintings explore the shapes, colours and atmosphere of the landscape, from boats resting on the shore to distant churches, open fields and weathered hillsides. Working with loose marks and layered colour, each painting captures a sense of place without describing every detail.</p>
         <p><a class="link-arrow" href="about.html">More about Sam</a></p>
       </div>
     </div>
@@ -130,8 +130,8 @@
       <div>
         <img class="site-footer__lockup" src="images/site/logo-lockup.png"
              alt="" width="516" height="237" loading="lazy" decoding="async">
-        <h2>Enquiries welcome</h2>
-        <p class="site-footer__note">For exhibition, press and other professional enquiries, please get in touch.</p>
+        <h2 data-footer-heading>Enquiries welcome</h2>
+        <p class="site-footer__note" data-footer-note>For exhibition, press and other professional enquiries, please get in touch.</p>
         <p style="margin-top: var(--space-3)"><a class="link-arrow" href="contact.html">Contact Sam</a></p>
       </div>
       <nav aria-label="Footer">
@@ -147,7 +147,7 @@
     </div>
     <div class="site-footer__base">
       <p>© <span id="year">2026</span> Sam Rudd. All rights reserved.</p>
-      <p>Contemporary British landscape painter</p>
+      <p data-footer-tagline>Contemporary British landscape painter</p>
     </div>
   </div>
 </footer>
@@ -155,6 +155,8 @@
 <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
 <script src="js/hero.js"></script>
 <script src="js/gallery.js"></script>
+<script src="js/content.js"></script>
+<script src="js/pages.js" defer></script>
 <script src="js/main.js" defer></script>
 </body>
 </html>

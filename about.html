@@ -40,7 +40,7 @@
 </script>
 </head>
 
-<body>
+<body data-page="about">
 <a class="skip-link" href="#main">Skip to content</a>
 
 <header class="site-header">
@@ -69,15 +69,15 @@
 
   <section class="page-head shell">
     <span class="eyebrow">About</span>
-    <h1>Sam Rudd</h1>
-    <p class="lede">Contemporary British landscape painter.</p>
+    <h1 data-page-heading>Sam Rudd</h1>
+    <p class="lede" data-page-lede>Contemporary British landscape painter.</p>
   </section>
 
   <section class="shell" style="padding-bottom: var(--section-y)">
     <div class="split split--portrait">
       <!-- Standing in for a photograph of Sam until there is one: one of her own
            paintings. Swap this for a real studio or portrait photo when it exists. -->
-      <div class="split__media" data-reveal>
+      <div class="split__media" data-reveal data-page-image>
         <picture>
           <source type="image/webp" sizes="(max-width: 52rem) 92vw, (max-width: 82rem) 42vw, 481px" srcset="
             images/paintings/saint-sand-sea/saint-sand-sea-400.webp 400w,
@@ -93,17 +93,15 @@
       </div>
 
       <div class="prose" data-reveal>
-        <p class="lede">Sam Rudd is a contemporary British landscape painter, drawing inspiration from the coast, countryside and places encountered along the way.</p>
+        <!-- Emptied and refilled from Sanity. Anything that must survive, such
+             as the link below, has to sit outside this element. -->
+        <div data-page-body>
+          <p class="lede">Sam Rudd is a contemporary British landscape painter, drawing inspiration from the coast, countryside and places encountered along the way.</p>
 
-        <p>Her paintings often begin with familiar scenes: boats pulled up on the sand, a church across the water, open fields and weathered hillsides. Rather than describing every detail, Sam works with loose marks, layered colour and memory to capture the character and atmosphere of a place.</p>
+          <p>Her paintings often begin with familiar scenes: boats pulled up on the sand, a church across the water, open fields and weathered hillsides. Rather than describing every detail, Sam works with loose marks, layered colour and memory to capture the character and atmosphere of a place.</p>
 
-        <p>The result sits somewhere between observation and recollection, allowing the landscape to remain recognisable while leaving space for colour, shape and feeling to take over.</p>
-
-        <!-- An exhibition list belongs here once there are real shows to name.
-             The .stack-list styles in css/style.css are ready for it:
-               <ul class="stack-list">
-                 <li><span class="year">2025</span><span>Exhibition, Gallery</span></li>
-               </ul> -->
+          <p>The result sits somewhere between observation and recollection, allowing the landscape to remain recognisable while leaving space for colour, shape and feeling to take over.</p>
+        </div>
 
         <p style="margin-top: var(--space-4)">
           <a class="link-arrow" href="paintings.html">View the gallery</a>
@@ -120,8 +118,8 @@
       <div>
         <img class="site-footer__lockup" src="images/site/logo-lockup.png"
              alt="" width="516" height="237" loading="lazy" decoding="async">
-        <h2>Enquiries welcome</h2>
-        <p class="site-footer__note">For exhibition, press and other professional enquiries, please get in touch.</p>
+        <h2 data-footer-heading>Enquiries welcome</h2>
+        <p class="site-footer__note" data-footer-note>For exhibition, press and other professional enquiries, please get in touch.</p>
         <p style="margin-top: var(--space-3)"><a class="link-arrow" href="contact.html">Contact Sam</a></p>
       </div>
       <nav aria-label="Footer">
@@ -137,12 +135,14 @@
     </div>
     <div class="site-footer__base">
       <p>© <span id="year">2026</span> Sam Rudd. All rights reserved.</p>
-      <p>Contemporary British landscape painter</p>
+      <p data-footer-tagline>Contemporary British landscape painter</p>
     </div>
   </div>
 </footer>
 
 <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+<script src="js/content.js"></script>
+<script src="js/pages.js" defer></script>
 <script src="js/main.js" defer></script>
 </body>
 </html>

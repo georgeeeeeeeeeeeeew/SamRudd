@@ -32,9 +32,23 @@ Sam publishes in Sanity  ->  the next page load shows it
 - **Project id**: `3zrcphqr`, dataset `production`, read publicly
 - **Studio source**: `studio/`, deployed with `sanity deploy`
 
-`js/gallery.js` queries the paintings and `js/hero.js` fills in the home page
-hero. Images come from Sanity's CDN, resized by adding `?w=800` to the URL, which
-is why there is no longer any resizing code here.
+`js/gallery.js` queries the paintings, `js/hero.js` fills in the home page hero,
+and `js/pages.js` fills in everything else: About, Studio, Exhibitions, Courses,
+the contact details and the home page's text sections. `js/content.js` holds the
+shared query helper and a small renderer for Sanity's rich text, which arrives as
+structured data rather than HTML.
+
+Everything is built with `createElement` and `textContent` rather than
+`innerHTML`, deliberately: the text comes from a CMS, and pasting it as HTML
+would let anything Sam typed change the structure of the page.
+
+Images come from Sanity's CDN, resized by adding `?w=800` to the URL, which is
+why there is no longer any resizing code here.
+
+Requests use `cache: 'no-cache'`. Sanity's CDN sends `max-age=3`, and without
+revalidating, a reload straight after an edit can show the old content, which
+defeats the point of reading live. The CDN itself reflects a change in under two
+seconds, measured.
 
 **Two consequences worth knowing.** The site now needs Sanity to be reachable: if
 it is down or the free tier changes, the pages have no paintings, and they say so

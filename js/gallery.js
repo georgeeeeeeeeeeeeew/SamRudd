@@ -34,7 +34,8 @@
   };
 
   function query(groq) {
-    return fetch(API + '?query=' + encodeURIComponent(groq))
+    // See the note in content.js: revalidate so an edit shows on the next reload.
+    return fetch(API + '?query=' + encodeURIComponent(groq), {cache: 'no-cache'})
       .then(function (r) {
         if (!r.ok) throw new Error('HTTP ' + r.status);
         return r.json();

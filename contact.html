@@ -28,7 +28,7 @@
 <link rel="stylesheet" href="css/style.css">
 </head>
 
-<body>
+<body data-page="contact">
 <a class="skip-link" href="#main">Skip to content</a>
 
 <header class="site-header">
@@ -57,8 +57,8 @@
 
   <section class="page-head shell">
     <span class="eyebrow">Contact</span>
-    <h1>Get in touch</h1>
-    <p class="lede">For exhibition, press and other professional enquiries, please get in touch. Sam reads every message and usually replies within a few days.</p>
+    <h1 data-page-heading>Get in touch</h1>
+    <p class="lede" data-page-lede>For exhibition, press and other professional enquiries, please get in touch. Sam reads every message and usually replies within a few days.</p>
   </section>
 
   <section class="shell" style="padding-bottom: var(--section-y)">
@@ -67,18 +67,18 @@
       <div class="contact-aside">
         <dl>
           <dt>Email</dt>
-          <dd><a class="link" href="mailto:hello@samrudd.co.uk">hello@samrudd.co.uk</a></dd>
+          <dd><a class="link" href="mailto:hello@samrudd.co.uk" data-contact-email="text">hello@samrudd.co.uk</a></dd>
 
           <!-- Add the studio location and visiting arrangements once confirmed. -->
           <dt>Studio</dt>
-          <dd>United Kingdom</dd>
+          <dd data-contact-location>United Kingdom</dd>
 
           <dt>Elsewhere</dt>
-          <dd><a class="link" href="https://www.instagram.com/" rel="me noopener" target="_blank">Instagram</a></dd>
+          <dd><a class="link" href="https://www.instagram.com/" rel="me noopener" target="_blank" data-contact-instagram>Instagram</a></dd>
         </dl>
 
-        <p class="form-note" style="margin-top: var(--space-4)">
-          For enquiries relating to the purchase or availability of paintings, please contact Sam's partnered gallery directly.
+        <p class="form-note" style="margin-top: var(--space-4)"><span data-contact-note>
+          For enquiries relating to the purchase or availability of paintings, please contact Sam's partnered gallery directly.</span>
         </p>
       </div>
 
@@ -126,9 +126,9 @@
       <div>
         <img class="site-footer__lockup" src="images/site/logo-lockup.png"
              alt="" width="516" height="237" loading="lazy" decoding="async">
-        <h2>Enquiries welcome</h2>
-        <p class="site-footer__note">For exhibition, press and other professional enquiries, please get in touch.</p>
-        <p style="margin-top: var(--space-3)"><a class="link-arrow" href="mailto:hello@samrudd.co.uk">Email directly</a></p>
+        <h2 data-footer-heading>Enquiries welcome</h2>
+        <p class="site-footer__note" data-footer-note>For exhibition, press and other professional enquiries, please get in touch.</p>
+        <p style="margin-top: var(--space-3)"><a class="link-arrow" href="mailto:hello@samrudd.co.uk" data-contact-email>Email directly</a></p>
       </div>
       <nav aria-label="Footer">
         <ul class="footer-links">
@@ -143,12 +143,14 @@
     </div>
     <div class="site-footer__base">
       <p>© <span id="year">2026</span> Sam Rudd. All rights reserved.</p>
-      <p>Contemporary British landscape painter</p>
+      <p data-footer-tagline>Contemporary British landscape painter</p>
     </div>
   </div>
 </footer>
 
 <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+<script src="js/content.js"></script>
+<script src="js/pages.js" defer></script>
 <script src="js/main.js" defer></script>
 
 <script>
@@ -157,7 +159,12 @@
      Until then the form falls back to opening the visitor's email app. */
   var ENDPOINT = '';
 
+  /* The address lives in Sanity so Sam can change it. This is the fallback
+     used until that request lands, and pages.js overwrites it via setEmail. */
   var CONTACT_EMAIL = 'hello@samrudd.co.uk';
+  window.SamRuddContact = {
+    setEmail: function (address) { if (address) CONTACT_EMAIL = address; }
+  };
   var form = document.getElementById('contact-form');
   var status = document.getElementById('form-status');
   var button = form.querySelector('button[type="submit"]');

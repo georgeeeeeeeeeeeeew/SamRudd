@@ -48,7 +48,7 @@
     if (el && value) el.textContent = value;
   }
 
-  fetch(API + '?query=' + encodeURIComponent(GROQ))
+  fetch(API + '?query=' + encodeURIComponent(GROQ), {cache: 'no-cache'})
     .then(function (r) {
       if (!r.ok) throw new Error('HTTP ' + r.status);
       return r.json();

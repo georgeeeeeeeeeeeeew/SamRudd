@@ -6,7 +6,6 @@
 <title>Studio | Sam Rudd</title>
 <meta name="description" content="Studio by the painter Sam Rudd.">
 <link rel="canonical" href="https://samrudd.moveconsultingpartners.com/studio.html">
-<meta name="robots" content="noindex">
 
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Sam Rudd">
@@ -31,7 +30,7 @@
 
 </head>
 
-<body>
+<body data-page="studio">
 <a class="skip-link" href="#main">Skip to content</a>
 
 <header class="site-header">
@@ -60,14 +59,14 @@
 
   <section class="page-head shell">
     <span class="eyebrow">Studio</span>
-    <h1>Studio</h1>
-    <p class="lede">A look inside the studio and how the paintings are made will appear here.</p>
+    <h1 data-page-heading>Studio</h1>
+    <p class="lede" data-page-lede>A look inside the studio and how the paintings are made will appear here.</p>
   </section>
 
-  <!-- PLACEHOLDER. This page is deliberately empty and is marked noindex in the
-       head above, and left out of sitemap.xml, so an empty page cannot end up in
-       search results. Remove the noindex line and add the page to sitemap.xml
-       once there is real content here. -->
+  <section class="shell" style="padding-bottom: var(--section-y)">
+    <div data-page-body></div>
+  </section>
+
 
 </main>
 
@@ -77,8 +76,8 @@
       <div>
         <img class="site-footer__lockup" src="images/site/logo-lockup.png"
              alt="" width="516" height="237" loading="lazy" decoding="async">
-        <h2>Enquiries welcome</h2>
-        <p class="site-footer__note">For exhibition, press and other professional enquiries, please get in touch.</p>
+        <h2 data-footer-heading>Enquiries welcome</h2>
+        <p class="site-footer__note" data-footer-note>For exhibition, press and other professional enquiries, please get in touch.</p>
         <p style="margin-top: var(--space-3)"><a class="link-arrow" href="contact.html">Contact Sam</a></p>
       </div>
       <nav aria-label="Footer">
@@ -94,12 +93,14 @@
     </div>
     <div class="site-footer__base">
       <p>© <span id="year">2026</span> Sam Rudd. All rights reserved.</p>
-      <p>Contemporary British landscape painter</p>
+      <p data-footer-tagline>Contemporary British landscape painter</p>
     </div>
   </div>
 </footer>
 
 <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+<script src="js/content.js"></script>
+<script src="js/pages.js" defer></script>
 <script src="js/main.js" defer></script>
 </body>
 </html>

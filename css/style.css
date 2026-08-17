@@ -617,6 +617,96 @@ a {
   }
 }
 
+/* The opening paragraph of a page of writing is set slightly larger. It used to
+   carry a class in the HTML; now the text comes from the CMS as plain
+   paragraphs, so the emphasis is applied by position instead. */
+[data-page-body] > p:first-child {
+  font-size: clamp(1.1rem, 1rem + 0.5vw, 1.3rem);
+  line-height: 1.6;
+  color: var(--ink-soft);
+}
+
+/* --- Listings: exhibitions and courses ------------------------------------ */
+
+.listing-heading {
+  font-size: clamp(1.4rem, 1.1rem + 1.2vw, 1.9rem);
+  margin-bottom: var(--space-4);
+}
+
+.listing-heading + .listing {
+  margin-bottom: var(--section-y);
+}
+
+.listing {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--rule);
+}
+
+.listing__item {
+  display: grid;
+  gap: var(--space-1) var(--space-5);
+  padding-block: var(--space-4);
+  border-bottom: 1px solid var(--rule);
+}
+
+/* Date in its own column once there is room, stacked above on a phone. */
+@media (min-width: 44rem) {
+  .listing__item {
+    grid-template-columns: 14rem 1fr;
+  }
+}
+
+.listing__date {
+  margin: 0;
+  font-size: 0.8125rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  padding-top: 0.35rem;
+}
+
+.listing__title {
+  margin: 0;
+  font-size: clamp(1.15rem, 1rem + 0.7vw, 1.45rem);
+  font-weight: 400;
+}
+
+.listing__meta {
+  margin: 0.35rem 0 0;
+  color: var(--ink-soft);
+}
+
+.listing__note {
+  margin-top: var(--space-2);
+  color: var(--ink-soft);
+  max-width: var(--measure);
+}
+
+.listing__note p {
+  margin-bottom: 0.6em;
+}
+
+.listing__flag {
+  margin: var(--space-2) 0 0;
+  font-size: 0.8125rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+/* Bulleted lists inside CMS text. */
+.prose-list {
+  margin: 0 0 1.15em;
+  padding-left: 1.25em;
+  color: var(--ink-soft);
+}
+
+.prose-list li {
+  margin-bottom: 0.4em;
+}
+
 /* --- Gallery filters and paging ------------------------------------------- */
 
 .gallery-filters {

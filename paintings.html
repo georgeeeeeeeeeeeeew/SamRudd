@@ -28,7 +28,7 @@
 <link rel="stylesheet" href="css/style.css">
 </head>
 
-<body>
+<body data-page="paintings">
 <a class="skip-link" href="#main">Skip to content</a>
 
 <header class="site-header">
@@ -57,8 +57,8 @@
 
   <section class="page-head shell">
     <span class="eyebrow">Gallery</span>
-    <h1>Paintings</h1>
-    <p class="lede">A selection of paintings inspired by the British coast, countryside and landscape.</p>
+    <h1 data-page-heading>Paintings</h1>
+    <p class="lede" data-page-lede>A selection of paintings inspired by the British coast, countryside and landscape.</p>
   </section>
 
   <section class="shell" style="padding-bottom: var(--section-y)" aria-label="All paintings">
@@ -86,8 +86,8 @@
       <div>
         <img class="site-footer__lockup" src="images/site/logo-lockup.png"
              alt="" width="516" height="237" loading="lazy" decoding="async">
-        <h2>Enquiries welcome</h2>
-        <p class="site-footer__note">For exhibition, press and other professional enquiries, please get in touch.</p>
+        <h2 data-footer-heading>Enquiries welcome</h2>
+        <p class="site-footer__note" data-footer-note>For exhibition, press and other professional enquiries, please get in touch.</p>
         <p style="margin-top: var(--space-3)"><a class="link-arrow" href="contact.html">Contact Sam</a></p>
       </div>
       <nav aria-label="Footer">
@@ -103,13 +103,15 @@
     </div>
     <div class="site-footer__base">
       <p>© <span id="year">2026</span> Sam Rudd. All rights reserved.</p>
-      <p>Contemporary British landscape painter</p>
+      <p data-footer-tagline>Contemporary British landscape painter</p>
     </div>
   </div>
 </footer>
 
 <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
 <script src="js/gallery.js"></script>
+<script src="js/content.js"></script>
+<script src="js/pages.js" defer></script>
 <script src="js/main.js" defer></script>
 
 <!-- Structured data for each painting, so the work can surface in image search.
@@ -120,7 +122,7 @@
   var GROQ = '*[_type=="painting" && draft != true]{title,medium,year,' +
     '"slug":slug.current,"url":photo.asset->url}';
   fetch('https://3zrcphqr.apicdn.sanity.io/v2024-01-01/data/query/production?query=' +
-        encodeURIComponent(GROQ))
+        encodeURIComponent(GROQ), {cache: 'no-cache'})
     .then(function (r) { return r.ok ? r.json() : null; })
     .then(function (body) {
       var rows = body && body.result;

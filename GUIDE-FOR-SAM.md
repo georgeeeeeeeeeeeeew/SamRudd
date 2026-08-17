@@ -1,4 +1,4 @@
-# Adding paintings to your website
+# Looking after your website
 
 You can change everything on the site yourself: the paintings, their titles, and
 the big picture on the front page. You don't need to know anything technical, and
@@ -14,7 +14,13 @@ waiting.
 Go to **[samrudd.sanity.studio](https://samrudd.sanity.studio)** and sign in with
 the link George sent you.
 
-You'll see two things: **Paintings** and **Front page**.
+You'll see a list down the side:
+
+- **Paintings** for the gallery
+- **Exhibitions** for shows
+- **Courses** for workshops
+- **About page**, **Studio page**, **Front page** and **Contact details** for the
+  words on those pages
 
 ---
 
@@ -96,6 +102,44 @@ You can change the words over the picture on the same screen.
 
 ---
 
+## Adding an exhibition
+
+Click **Exhibitions**, then the compose button, and fill in the name, the gallery,
+the town and the dates. Publish.
+
+The page sorts itself out. Anything still to come appears under **Current and
+upcoming**, and it moves down to **Past exhibitions** on its own once the end
+date has gone by. There is nothing to tidy up later.
+
+Add a link if the gallery has a page for the show.
+
+---
+
+## Adding a course
+
+Same idea: **Courses**, compose, then the name, date, where it is and what it
+costs. Add a booking link if there is one, and tick **Fully booked** when it
+fills up.
+
+Courses disappear from the page by themselves once the date has passed.
+
+---
+
+## Changing the words on a page
+
+**About page**, **Studio page** and **Contact details** each open a form with the
+text on that page. Change what you like and publish.
+
+The **Front page** screen has tabs across the top for the different parts of the
+home page: the big picture at the top, the selected work section, the about
+section, and the footer.
+
+In the text boxes you can use **bold**, *italic*, links and bullet points, and
+add subheadings to break up a long page. You cannot break the layout, so
+experiment freely.
+
+---
+
 ## Removing a painting
 
 Open it, then use the menu at the bottom of the form and choose **Delete**. If
@@ -121,8 +165,9 @@ called *Untitled (Green Valley)* because its file had no name at all. Please
 correct any that are wrong.
 
 **The About page** is waiting for you. There is a short general paragraph there
-at the moment. A few sentences in your own words about how and why you paint
-would be far better than anything anyone else could write. Send them to George.
+at the moment that somebody else wrote. A few sentences in your own words about
+how and why you paint would be far better, and you can now write them yourself:
+open **About page**, replace the text, and publish.
 
 **The web address name** is worth leaving alone once a painting has been shared
 with someone, because changing it breaks the link they have.
