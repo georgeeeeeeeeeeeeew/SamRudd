@@ -24,6 +24,16 @@ You'll see a list down the side:
 
 ---
 
+## Seeing your changes
+
+There is a **Preview** tab at the top of the studio. It shows the real website
+inside the page, so you can check how something looks without leaving.
+
+Publish first, then reload the preview. The website only ever shows published
+work, so anything still being edited will not appear there.
+
+---
+
 ## Finding a painting
 
 Click **Paintings** and you get the whole collection, each one shown with a

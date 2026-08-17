@@ -31,6 +31,15 @@ Sam publishes in Sanity  ->  the next page load shows it
 - **Studio** (what Sam sees): https://samrudd.sanity.studio
 - **Project id**: `3zrcphqr`, dataset `production`, read publicly
 - **Studio source**: `studio/`, deployed with `sanity deploy`
+- **Preview tab**: embeds the live site in the studio. `SITE_URL` at the top of
+  `studio/sanity.config.ts` points at it and needs changing when the custom
+  domain goes live.
+
+Embedding needs the site to permit it. `vercel.json` sends
+`Content-Security-Policy: frame-ancestors 'self' https://*.sanity.studio` rather
+than `X-Frame-Options`, because the latter cannot allowlist another origin: its
+`ALLOW-FROM` value is deprecated and ignored. Without this the Preview tab shows
+a blank panel once the site is on Vercel.
 
 `js/gallery.js` queries the paintings, `js/hero.js` fills in the home page hero,
 and `js/pages.js` fills in everything else: About, Studio, Exhibitions, Courses,

@@ -1,7 +1,13 @@
 import {defineConfig} from 'sanity'
 import {structureTool} from 'sanity/structure'
+import {presentationTool} from 'sanity/presentation'
 import {visionTool} from '@sanity/vision'
 import {schemaTypes} from './schemaTypes'
+
+/* Where the Preview tab points. The site reads published content live, so the
+   preview is simply the real website in a panel: publish, then reload it and
+   the change is there. Change this when the custom domain goes live. */
+const SITE_URL = 'https://georgeeeeeeeeeeeeew.github.io/SamRudd/'
 
 /* Pages that exist once rather than as a list. Each is opened directly from the
    sidebar instead of showing a list containing a single item, and each has its
@@ -39,6 +45,17 @@ export default defineConfig({
                 .child(S.document().schemaType(type).documentId(id).title(title)),
             ),
           ]),
+    }),
+    /* A Preview tab showing the actual website, because the obvious question
+       after changing something is "what does it look like", and Vision answers
+       a completely different one. */
+    presentationTool({
+      name: 'preview',
+      title: 'Preview',
+      // No previewMode: that is for sites that serve unpublished drafts behind
+      // a token. This one only ever shows published content, so the preview is
+      // just the live site.
+      previewUrl: {origin: SITE_URL},
     }),
     visionTool(),
   ],
