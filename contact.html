@@ -66,15 +66,15 @@
 
       <div class="contact-aside">
         <dl>
-          <dt>Email</dt>
+          <dt data-contact-email-label>Email</dt>
           <dd><a class="link" href="mailto:hello@samrudd.co.uk" data-contact-email="text">hello@samrudd.co.uk</a></dd>
 
           <!-- Add the studio location and visiting arrangements once confirmed. -->
-          <dt>Studio</dt>
+          <dt data-contact-studio-label>Studio</dt>
           <dd data-contact-location>United Kingdom</dd>
 
-          <dt>Elsewhere</dt>
-          <dd><a class="link" href="https://www.instagram.com/" rel="me noopener" target="_blank" data-contact-instagram>Instagram</a></dd>
+          <dt data-contact-links-label>Elsewhere</dt>
+          <dd data-contact-links><a class="link" href="https://www.instagram.com/" rel="me noopener" target="_blank">Instagram</a></dd>
         </dl>
 
         <p class="form-note" style="margin-top: var(--space-4)"><span data-contact-note>
@@ -85,17 +85,17 @@
       <div>
         <form id="contact-form" method="post" novalidate>
           <div class="field">
-            <label for="name">Your name</label>
+            <label for="name" data-form-label="name">Your name</label>
             <input type="text" id="name" name="name" autocomplete="name" required>
           </div>
 
           <div class="field">
-            <label for="email">Email address</label>
+            <label for="email" data-form-label="email">Email address</label>
             <input type="email" id="email" name="email" autocomplete="email" required>
           </div>
 
           <div class="field">
-            <label for="message">Message</label>
+            <label for="message" data-form-label="message">Message</label>
             <textarea id="message" name="message" required></textarea>
           </div>
 
@@ -109,7 +109,7 @@
 
           <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
 
-          <p class="form-note">
+          <p class="form-note" data-form-privacy>
             Your name, email address and message are used only to reply to this enquiry. They are not added to a mailing list or shared with anyone.
           </p>
         </form>
@@ -159,8 +159,24 @@
   /* The address lives in Sanity so Sam can change it. This is the fallback
      used until that request lands, and pages.js overwrites it via setEmail. */
   var CONTACT_EMAIL = 'hello@samrudd.co.uk';
+
+  /* Wording the form says back to the visitor. These are the fallbacks; the
+     CMS values arrive a moment later and replace them. */
+  var MESSAGES = {
+    incomplete: 'Please complete the highlighted fields before sending.',
+    sending: 'Sending…',
+    success: 'Thank you. Your message has been sent, and Sam will reply soon.',
+    error: 'Sorry, that did not send. Please email'
+  };
+
   window.SamRuddContact = {
-    setEmail: function (address) { if (address) CONTACT_EMAIL = address; }
+    setEmail: function (address) { if (address) CONTACT_EMAIL = address; },
+    setMessages: function (next) {
+      if (!next) return;
+      if (next.success) MESSAGES.success = next.success;
+      if (next.error) MESSAGES.error = next.error;
+      if (next.incomplete) MESSAGES.incomplete = next.incomplete;
+    }
   };
   var form = document.getElementById('contact-form');
   var status = document.getElementById('form-status');
@@ -180,7 +196,7 @@
 
     if (!form.checkValidity()) {
       var field = firstInvalid();
-      say('Please complete the highlighted fields before sending.', 'error');
+      say(MESSAGES.incomplete, 'error');
       if (field) field.focus();
       return;
     }
@@ -196,12 +212,12 @@
         'mailto:' + CONTACT_EMAIL +
         '?subject=' + encodeURIComponent('Website enquiry') +
         '&body=' + encodeURIComponent(body);
-      say('Opening your email app so you can send this message to Sam.', 'ok');
+      say('Opening your email app so you can send this message.', 'ok');
       return;
     }
 
     button.disabled = true;
-    say('Sending…', 'ok');
+    say(MESSAGES.sending, 'ok');
 
     fetch(ENDPOINT, {
       method: 'POST',
@@ -211,13 +227,10 @@
       .then(function (response) {
         if (!response.ok) throw new Error('Request failed');
         form.reset();
-        say('Thank you. Your message has been sent, and Sam will reply soon.', 'ok');
+        say(MESSAGES.success, 'ok');
       })
       .catch(function () {
-        say(
-          'Sorry, that did not send. Please email ' + CONTACT_EMAIL + ' directly.',
-          'error'
-        );
+        say(MESSAGES.error + ' ' + CONTACT_EMAIL + '.', 'error');
       })
       .then(function () {
         button.disabled = false;

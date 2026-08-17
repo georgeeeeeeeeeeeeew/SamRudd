@@ -152,6 +152,17 @@ Footer, and **Buttons**.
 gallery" or "Contact Sam" can be reworded without anyone touching the code. One
 box changes it everywhere that wording appears.
 
+**Contact details** has tabs too: Header, Details and Form.
+
+**Details** holds your email address, where your studio is, and the small
+headings above each of them. Under **Links** you can add as many links as you
+like, Instagram, a gallery, anywhere else. Each one takes a label and a web
+address, and the arrows at the side reorder them.
+
+**Form** holds the names of the three boxes people type into, the small print
+underneath, and the three sentences the form says back: when a message has been
+sent, when it has failed, and when a box has been left empty.
+
 In the text boxes you can use **bold**, *italic*, links and bullet points, and
 add subheadings to break up a long page. You cannot break the layout, so
 experiment freely.

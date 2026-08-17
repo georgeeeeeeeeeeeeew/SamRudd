@@ -269,14 +269,52 @@
   /* --- Contact ----------------------------------------------------------- */
 
   function renderContact() {
-    var groq = '*[_id=="contactDetails"][0]{eyebrow,heading,lede,email,location,instagramUrl,galleryNote}';
+    var groq = '*[_id=="contactDetails"][0]{eyebrow,heading,lede,' +
+      'emailLabel,email,studioLabel,location,linksLabel,links,galleryNote,' +
+      'formNameLabel,formEmailLabel,formMessageLabel,privacyNote,' +
+      'formSuccess,formError,formIncomplete}';
 
     S.query(groq)
       .then(function (doc) {
         if (!doc) return;
         applyHeader(doc);
+        S.setText('[data-contact-email-label]', doc.emailLabel);
+        S.setText('[data-contact-studio-label]', doc.studioLabel);
+        S.setText('[data-contact-links-label]', doc.linksLabel);
         S.setText('[data-contact-location]', doc.location);
         S.setText('[data-contact-note]', doc.galleryNote);
+        S.setText('[data-form-privacy]', doc.privacyNote);
+
+        if (doc.formNameLabel) S.setText('[data-form-label="name"]', doc.formNameLabel);
+        if (doc.formEmailLabel) S.setText('[data-form-label="email"]', doc.formEmailLabel);
+        if (doc.formMessageLabel) S.setText('[data-form-label="message"]', doc.formMessageLabel);
+
+        // The form's own wording, handed to the script that runs it.
+        if (window.SamRuddContact && window.SamRuddContact.setMessages) {
+          window.SamRuddContact.setMessages({
+            success: doc.formSuccess,
+            error: doc.formError,
+            incomplete: doc.formIncomplete
+          });
+        }
+
+        /* Any number of links rather than just Instagram. Rebuilt rather than
+           edited in place, so removing one in the CMS removes it here. */
+        var linksWrap = document.querySelector('[data-contact-links]');
+        if (linksWrap && doc.links && doc.links.length) {
+          linksWrap.textContent = '';
+          doc.links.forEach(function (link, i) {
+            if (!link || !link.url) return;
+            if (i) linksWrap.appendChild(document.createTextNode(', '));
+            var a = document.createElement('a');
+            a.className = 'link';
+            a.href = link.url;
+            a.rel = 'me noopener';
+            a.target = '_blank';
+            a.textContent = link.label || link.url;
+            linksWrap.appendChild(a);
+          });
+        }
 
         if (doc.email) {
           document.querySelectorAll('[data-contact-email]').forEach(function (a) {
