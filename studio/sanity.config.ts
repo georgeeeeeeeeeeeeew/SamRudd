@@ -52,10 +52,14 @@ export default defineConfig({
     presentationTool({
       name: 'preview',
       title: 'Preview',
-      // No previewMode: that is for sites that serve unpublished drafts behind
-      // a token. This one only ever shows published content, so the preview is
-      // just the live site.
-      previewUrl: {origin: SITE_URL},
+      /* The full URL as a string, not {origin}. `origin` is scheme and host
+         only, so a path on the end is discarded, which lands the preview on a
+         bare github.io with no site on it. The string form keeps the path.
+
+         No preview mode either: that is for sites serving unpublished drafts
+         behind a token. This one only ever shows published content, so the
+         preview is simply the live site. */
+      previewUrl: SITE_URL,
     }),
     visionTool(),
   ],
