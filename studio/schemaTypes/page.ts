@@ -18,24 +18,24 @@ export const page = defineType({
       title: 'Page',
       type: 'string',
       readOnly: true,
-      description: 'Which page this is. Set when the page was created.',
+      description: 'Which page this is.',
     }),
     defineField({
       name: 'heading',
       title: 'Heading',
       type: 'string',
-      description: 'The large words at the top of the page.',
+      description: 'The main heading.',
     }),
     defineField({
       name: 'lede',
-      title: 'Opening line',
+      title: 'Standfirst',
       type: 'text',
       rows: 2,
-      description: 'The slightly larger sentence under the heading. Optional.',
+      description: 'The larger line under the heading.',
     }),
     defineField({
       name: 'body',
-      title: 'Text',
+      title: 'Body',
       type: 'array',
       of: [
         {
@@ -56,16 +56,16 @@ export const page = defineType({
     }),
     defineField({
       name: 'image',
-      title: 'Picture',
+      title: 'Image',
       type: 'image',
       options: {hotspot: true},
-      description: 'Shown beside the text. A photograph of you works well here.',
+      description: 'Shown beside the body text.'
     }),
     defineField({
       name: 'imageAlt',
-      title: 'Description of the picture',
+      title: 'Alt text',
       type: 'string',
-      description: 'What the picture shows, read aloud to blind visitors.',
+      description: 'Describes the image for screen readers.',
     }),
   ],
   preview: {

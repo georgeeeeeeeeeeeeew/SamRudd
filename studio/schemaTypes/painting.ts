@@ -20,42 +20,39 @@ export const painting = defineType({
       name: 'title',
       title: 'Title',
       type: 'string',
-      description: 'The name of the painting, as you would like it shown.',
+      description: 'As it should appear on the site.',
       validation: (rule) => rule.required().warning('Every painting needs a title.'),
     }),
 
     defineField({
       name: 'photo',
-      title: 'Photograph',
+      title: 'Image',
       type: 'image',
-      description:
-        'A photograph of the painting. Upload the biggest, sharpest version you have. ' +
-        'There is no need to shrink it first.',
+      description: 'Upload the largest version you have. It is resized automatically.',
       options: {hotspot: true},
       validation: (rule) => rule.required(),
     }),
 
     defineField({
       name: 'alt',
-      title: 'Description of the picture',
+      title: 'Alt text',
       type: 'text',
       rows: 3,
       description:
-        'A sentence describing what the painting shows, for example "two blue boats on ' +
-        'pale sand, with cottages behind". This is read aloud to blind visitors and is how ' +
-        'the painting gets found in an image search, so describe the scene rather than ' +
+        'Describes the image for screen readers and image search, for example "two blue ' +
+        'boats on pale sand, with cottages behind". Describe the scene rather than ' +
         'repeating the title.',
       validation: (rule) => rule.required().warning('Without this the title is read aloud instead.'),
     }),
 
     defineField({
       name: 'slug',
-      title: 'Web address name',
+      title: 'Slug',
       type: 'slug',
       options: {source: 'title', maxLength: 96},
       description:
-        'Made from the title. Leave it alone once a painting has been shared, or the link ' +
-        'someone already has will stop working.',
+        'The web address for this painting. Generated from the title. Changing it breaks ' +
+        'any link already shared.',
       validation: (rule) => rule.required(),
     }),
 
@@ -64,33 +61,31 @@ export const painting = defineType({
       title: 'Date',
       type: 'date',
       options: {dateFormat: 'D MMMM YYYY'},
-      description:
-        'When it was painted. Shown on the painting, and useful for sorting the ' +
-        'list here. The order on the website is set by dragging, not by this.',
+      description: 'When it was painted. Shown alongside the work. Gallery order is set by dragging.',
     }),
 
     defineField({
       name: 'draft',
-      title: 'Hide for now',
+      title: 'Hidden',
       type: 'boolean',
       initialValue: false,
-      description: 'Keeps this painting off the website while you are still working on it.',
+      description: 'Keeps this painting off the website.',
     }),
 
     defineField({
       name: 'featured',
-      title: 'Show on the front page',
+      title: 'Featured',
       type: 'boolean',
       initialValue: false,
-      description: 'Around six works well. Every painting appears in the gallery either way.',
+      description: 'Shows on the home page. Around six works well. Every painting appears in the gallery regardless.',
     }),
 
     defineField({
       name: 'series',
-      title: 'Group',
+      title: 'Category',
       type: 'string',
       options: {list: ['Coastal', 'Landscape'], layout: 'radio'},
-      description: 'Visitors use this to filter the gallery, so it is worth setting.',
+      description: 'Used by the gallery filters.',
     }),
 
     // Written by dragging in the Paintings list. Never edited by hand.

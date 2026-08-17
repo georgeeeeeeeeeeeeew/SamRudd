@@ -222,7 +222,8 @@
       nextBtn.disabled = index === items.length - 1;
 
       if (history.replaceState) {
-        history.replaceState(null, '', '#painting=' + p.slug);
+        var slug = (window.SamRudd && window.SamRudd.clean) ? window.SamRudd.clean(p.slug) : p.slug;
+        history.replaceState(null, '', '#painting=' + slug);
       }
     }
 
@@ -327,9 +328,19 @@
     var lightbox = Lightbox();
     var activeSeries = 'all';
 
+    /* Categories are compared and de-duplicated, so they must be stega-free:
+       in the preview each value carries invisible markers, which made nine
+       identical categories look like nine different ones and produced a filter
+       button for every painting. */
+    function seriesOf(p) {
+      return (window.SamRudd && window.SamRudd.clean)
+        ? window.SamRudd.clean(p.series || '')
+        : (p.series || '');
+    }
+
     function matching() {
       if (activeSeries === 'all') return all;
-      return all.filter(function (p) { return p.series === activeSeries; });
+      return all.filter(function (p) { return seriesOf(p) === activeSeries; });
     }
 
     function appendCards(from, list) {
@@ -384,7 +395,8 @@
     if (filterBar) {
       var series = [];
       all.forEach(function (p) {
-        if (p.series && series.indexOf(p.series) === -1) series.push(p.series);
+        var name = seriesOf(p);
+        if (name && series.indexOf(name) === -1) series.push(name);
       });
 
       // One group is not a choice, so only offer filters when there are two.
@@ -421,7 +433,10 @@
     var match = /#painting=([\w-]+)/.exec(location.hash);
     if (match) {
       var list = matching();
-      var target = list.findIndex(function (p) { return p.slug === match[1]; });
+      var target = list.findIndex(function (p) {
+        var slug = (window.SamRudd && window.SamRudd.clean) ? window.SamRudd.clean(p.slug) : p.slug;
+        return slug === match[1];
+      });
       if (target > -1) {
         while (visible.length <= target && visible.length < list.length) {
           appendCards(visible.length, list);

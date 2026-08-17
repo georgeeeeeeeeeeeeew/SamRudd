@@ -164,6 +164,19 @@ window.SamRudd = (function () {
     });
   }
 
+  /* Strip the invisible characters stega hides in strings.
+
+     They are harmless in text meant for reading, and necessary there, since
+     they are what makes click-to-edit work. But any value used as data rather
+     than prose has to be cleaned first: two identical categories arrive as two
+     different strings, so comparing or de-duplicating them silently fails. That
+     is what produced nine "Coastal" filter buttons instead of one. */
+  function clean(value) {
+    if (typeof value !== 'string') return value;
+    // Unicode tag characters, U+E0000 to U+E007F, plus a zero-width space.
+    return value.replace(/[\u{E0000}-\u{E007F}\u200B]/gu, '');
+  }
+
   /* Sanity resizes on request, so a width is just a parameter on the URL. */
   function imageUrl(url, width) {
     return url + '?w=' + width + '&q=80&auto=format';
@@ -304,6 +317,7 @@ window.SamRudd = (function () {
   return {
     inPreview: inPreview,
     query: query,
+    clean: clean,
     onContentChange: onContentChange,
     imageUrl: imageUrl,
     srcset: srcset,

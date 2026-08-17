@@ -27,7 +27,7 @@
   var API = 'https://' + PROJECT + '.apicdn.sanity.io/v2024-01-01/data/query/production';
 
   var GROQ =
-    '*[_id=="siteSettings"][0]{heroHeadingLine1,heroHeadingLine2,heroTagline,' +
+    '*[_id=="siteSettings"][0]{heroHeading,heroTagline,' +
     '"painting":hero->{title,alt,' +
     '"url":photo.asset->url,' +
     '"width":photo.asset->metadata.dimensions.width,' +
@@ -63,13 +63,15 @@
       if (!s) return;
 
       var heading = hero.querySelector('.hero__title');
-      if (heading && s.heroHeadingLine1) {
+      if (heading && s.heroHeading) {
+        /* One field now, rather than two. Wherever Sam presses return becomes a
+           line break, which is how a headline is normally written, instead of
+           making her think in "first line" and "second line". */
         heading.textContent = '';
-        heading.appendChild(document.createTextNode(s.heroHeadingLine1));
-        if (s.heroHeadingLine2) {
-          heading.appendChild(document.createElement('br'));
-          heading.appendChild(document.createTextNode(s.heroHeadingLine2));
-        }
+        String(s.heroHeading).split(/\r?\n/).forEach(function (line, i) {
+          if (i) heading.appendChild(document.createElement('br'));
+          heading.appendChild(document.createTextNode(line));
+        });
       }
       text('.hero__tagline', s.heroTagline);
 
