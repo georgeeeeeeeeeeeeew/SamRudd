@@ -9,8 +9,8 @@ Her instructions are in [GUIDE-FOR-SAM.md](GUIDE-FOR-SAM.md); this file is the
 technical side.
 
 **Running it locally** needs a web server, because the pages fetch their content
-as JSON and a browser blocks that over `file://`. Double-clicking `index.html`
-will show an empty gallery. Instead:
+over the network and a browser blocks that from a `file://` page. Double-clicking
+`index.html` shows an empty gallery. Instead:
 
 ```bash
 python3 -m http.server 8123
@@ -18,73 +18,39 @@ python3 -m http.server 8123
 
 ---
 
-## How content flows
+## How content works
+
+Paintings live in **Sanity**, not in this repository. The site reads them in the
+browser when a page loads, so whatever Sam publishes is live on the next reload.
+There is no build step and nothing to wait for.
 
 ```
-Sam saves in the CMS
-        │
-        ▼
-content/paintings/<slug>.md   ← one file per painting, what she edits
-images/uploads/…              ← the photograph she uploaded
-        │
-        │  GitHub Action: scripts/process_content.py
-        │    • takes the slug from the filename
-        │    • resizes the photo to 400/800/1200/1600 in JPEG + WebP
-        │    • measures the results, tidies the upload away
-        │    • sorts: pinned first, then newest date, drafts dropped
-        ▼
-content/gallery.json          ← generated: every published painting
-content/featured.json         ← generated: only the home page's handful
-        │
-        │  GitHub Action: scripts/build_pages.py
-        ▼
-index.html hero               ← rewritten between the `hero:*` comment markers
+Sam publishes in Sanity  ->  the next page load shows it
 ```
 
-**One file per painting, not one file for all of them.** That is what makes the
-CMS list searchable and sortable, and it means saving one painting does not
-rewrite every other one. At a few hundred works a single file would be slow to
-load, slow to save, and produce a diff nobody can read.
+- **Studio** (what Sam sees): https://samrudd.sanity.studio
+- **Project id**: `3zrcphqr`, dataset `production`, read publicly
+- **Studio source**: `studio/`, deployed with `sanity deploy`
 
-**Two generated files, not one.** The home page shows six paintings and has no
-business downloading several hundred records to find them, so it reads
-`featured.json` while the gallery reads `gallery.json`.
+`js/gallery.js` queries the paintings and `js/hero.js` fills in the home page
+hero. Images come from Sanity's CDN, resized by adding `?w=800` to the URL, which
+is why there is no longer any resizing code here.
 
-Sam's files and the generated ones are kept strictly apart: nothing generated
-appears in her editing form, and nothing she types can be clobbered by the
-Action.
+**Two consequences worth knowing.** The site now needs Sanity to be reachable: if
+it is down or the free tier changes, the pages have no paintings, and they say so
+rather than showing an empty gallery. And the artwork no longer lives in your
+repository. The copies under `images/paintings/` are kept deliberately as an
+offline archive of what was there at the time of the move, even though nothing
+loads them any more.
 
-The hero is the one thing not fetched at runtime. It is the largest image on the
-site and the first thing anyone sees, so it stays as real HTML. Drawing it with
-JavaScript would flash an empty rectangle on every visit. `build_pages.py` keeps
-that HTML in step, rewriting only what sits between the `hero:*:start` and
-`hero:*:end` comments in `index.html`.
+**Changing what Sam sees** means editing `studio/schemaTypes/painting.ts` and
+running `npm run deploy` in `studio/`. That needs Node 22 or newer; the Mac this
+was built on had Node 20, so use a version manager rather than replacing it.
 
-## Adding a painting yourself
-
-You don't need the CMS. Add a file to `content/paintings/`, copying the shape of
-an existing one, with `photo:` pointing at any image on disk. The filename
-becomes the web address. Then run:
-
-```bash
-python3 scripts/process_content.py && python3 scripts/build_pages.py
-```
-
-Both are safe to run repeatedly, running them twice changes nothing the second
-time. `--check` on the first one reports what it would do without touching
-anything. `scripts/resize-images.py` is still there for one-off resizing outside
-this flow.
-
-**About the description (`alt`):** describe what the painting *shows*, not just
-its title. It is read aloud to blind visitors and it is how the work is found in
-image search. "A slow river turning through summer meadows, its surface breaking
-into pale greens" is useful; "painting" is not. It is a required field in the CMS
-for that reason.
-
-Originals live in `originals/`, which is never published. Only the resized
-copies in `images/` are. Keep full-resolution files backed up separately; the
-Action deletes uploads once it has processed them, and the only copy after that
-is in git history.
+**CORS.** Browser requests to Sanity only work from allowlisted addresses. The
+localhost dev server, the github.io URL, the vercel.app URL and the live
+subdomain are already added. A new address needs
+`npx sanity cors add <origin>` from `studio/`.
 
 ---
 
@@ -129,33 +95,19 @@ site locally, but all of it should be sorted before you point a domain at it.
 
 ---
 
-## Turning the CMS on
+## Giving Sam access
 
-Everything in the repository is already configured. What remains needs your
-GitHub account, so it has to be you:
+Everything is set up. What remains needs your Sanity account:
 
-1. **Authorise Pages CMS.** Go to [app.pagescms.org](https://app.pagescms.org),
-   sign in with GitHub, and grant it access to the `SamRudd` repository (you can
-   grant access to that one repository only, as it does not need your whole
-   account). It reads `.pages.yml` from the repo and builds the editing screens
-   from it.
+1. Open [sanity.io/manage](https://sanity.io/manage), choose the **Sam Rudd**
+   project, then **Members**, and invite her by email address.
+2. She signs in at [samrudd.sanity.studio](https://samrudd.sanity.studio) with
+   Google, GitHub or an email link. She does **not** need a GitHub account, and
+   nothing is installed on her machine.
+3. Give her [GUIDE-FOR-SAM.md](GUIDE-FOR-SAM.md).
 
-2. **Invite Sam.** In the project's settings, add her by email address. She gets
-   a sign-in link and does **not** need a GitHub account of her own.
-
-3. **Check the Action can push.** In the repository, under
-   *Settings → Actions → General → Workflow permissions*, make sure **Read and
-   write permissions** is selected. Without it the resizing job runs but cannot
-   commit, and nothing Sam saves will ever appear.
-
-4. **Test it end to end before handing it over.** Add a painting yourself through
-   the CMS with a deliberately huge photograph, and confirm that: the Action runs
-   green in the Actions tab, `content/gallery.json` gains an entry, the resized
-   files appear under `images/paintings/`, `images/uploads/` is emptied again,
-   and the painting shows up on the site. Then delete it.
-
-If the Action fails, its log says which painting and why. The script is written
-to name the problem rather than fail silently.
+The free plan covers 20 users, 10,000 documents and 100GB of images, which is far
+more than this site will use.
 
 ---
 
@@ -163,27 +115,19 @@ to name the problem rather than fail silently.
 
 ```
 index.html  paintings.html  about.html  contact.html  404.html
-.pages.yml                  what Sam sees in the CMS, labels, help text, fields
-GUIDE-FOR-SAM.md            her instructions, in plain English
-content/paintings/          SOURCE: one markdown file per painting, what Sam edits
-content/settings.json       SOURCE: hero picture and headline
-content/gallery.json        GENERATED: every published painting, don't hand-edit
-content/featured.json       GENERATED: just the home page's selection
+exhibitions.html  courses.html  studio.html   empty placeholders, noindex
 css/style.css               colours, type and layout, all the design lives here
-js/gallery.js               builds the grids, runs the lightbox
+js/gallery.js               queries Sanity, builds the grids, runs the lightbox
+js/hero.js                  fills the home page hero from Sanity
 js/main.js                  header, mobile menu, scroll reveals
-images/paintings/<slug>/    web-sized paintings, several widths each
-images/uploads/             where CMS uploads land; emptied by the Action
+studio/                     the Sanity Studio: schema, config, one-off importer
+images/paintings/           archive of the artwork as it was before the move
 images/site/                logo files, social-share image
 brand/                      the logo master as supplied
 fonts/                      Fraunces + Inter, self-hosted (licence included)
 originals/                  full-size masters, not published
-scripts/process_content.py  resizes uploads, writes content/gallery.json
-scripts/build_pages.py      rewrites the home page hero
-scripts/resize-images.py    standalone resizer, for one-offs
 scripts/set_domain.py       points canonical/social/sitemap URLs at a domain
-vercel.json                 caching and security headers for Vercel
-.github/workflows/          the Action that runs the two scripts on save
+vercel.json                 caching, security headers and the old gallery redirect
 ```
 
 Colours and spacing are CSS custom properties at the top of `css/style.css`. The

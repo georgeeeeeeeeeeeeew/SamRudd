@@ -69,39 +69,15 @@
 <main id="main">
 
   <section class="hero">
-    <!-- hero:media:start -->
-    <div class="hero__media">
-      <picture>
-        <source type="image/webp" sizes="100vw" srcset="
-          images/paintings/blue-boats/blue-boats-400.webp 400w,
-          images/paintings/blue-boats/blue-boats-800.webp 800w,
-          images/paintings/blue-boats/blue-boats-1200.webp 1200w,
-          images/paintings/blue-boats/blue-boats-1280.webp 1280w">
-        <img
-          src="images/paintings/blue-boats/blue-boats-1280.jpg"
-          sizes="100vw"
-          srcset="
-            images/paintings/blue-boats/blue-boats-400.jpg 400w,
-            images/paintings/blue-boats/blue-boats-800.jpg 800w,
-            images/paintings/blue-boats/blue-boats-1200.jpg 1200w,
-            images/paintings/blue-boats/blue-boats-1280.jpg 1280w"
-          alt="Two blue rowing boats drawn up on pale sand, with cottages and dark trees on the bank behind them."
-          width="1280" height="956" fetchpriority="high" decoding="async">
-      </picture>
-    </div>
-    <!-- hero:media:end -->
+    <div class="hero__media"></div>
 
     <div class="hero__inner shell">
-      <!-- hero:text:start -->
       <h1 class="hero__title">Contemporary<br>landscape painting</h1>
       <p class="hero__tagline">Inspired by the British landscape, from quiet stretches of coast to the colours and textures of the countryside.</p>
-      <!-- hero:text:end -->
       <div class="hero__actions">
         <a class="link-arrow" href="paintings.html">View the gallery</a>
       </div>
-      <!-- hero:caption:start -->
-      <p class="hero__caption">Blue Boats</p>
-      <!-- hero:caption:end -->
+      <p class="hero__caption"></p>
     </div>
   </section>
 
@@ -112,7 +88,7 @@
       <p>A selection of work inspired by the colours, textures and atmosphere of the British coast and countryside.</p>
     </div>
 
-    <ul class="gallery-grid" data-gallery="featured" data-src="content/featured.json" data-limit="6" data-reveal></ul>
+    <ul class="gallery-grid" data-gallery="featured" data-limit="6" data-reveal></ul>
 
     <p style="margin-top: var(--space-5)" data-reveal>
       <a class="link-arrow" href="paintings.html">View the gallery</a>
@@ -177,6 +153,7 @@
 </footer>
 
 <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+<script src="js/hero.js"></script>
 <script src="js/gallery.js"></script>
 <script src="js/main.js" defer></script>
 </body>

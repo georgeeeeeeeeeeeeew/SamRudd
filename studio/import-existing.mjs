@@ -98,6 +98,9 @@ for (const file of files) {
     pinned: Boolean(data.pinned),
     draft: Boolean(data.draft),
     date: data.date || undefined,
+    // Preserves the order the paintings were in before the move, so the
+    // gallery does not silently reshuffle while dates are still missing.
+    position: data.position ? Number(data.position) : undefined,
     photo: {_type: 'image', asset: {_type: 'reference', _ref: asset._id}},
   })
   console.log('done')

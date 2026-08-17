@@ -99,6 +99,15 @@ export const painting = defineType({
       description: 'Visitors use this to filter the gallery, so it is worth setting.',
     }),
 
+    defineField({
+      name: 'position',
+      title: 'Manual order',
+      type: 'number',
+      hidden: true,
+      description:
+        'Only breaks ties between paintings with no date. Nothing to set by hand.',
+    }),
+
     defineField({name: 'year', title: 'Year', type: 'string'}),
     defineField({name: 'medium', title: 'Medium', type: 'string', description: 'For example "Oil on canvas".'}),
     defineField({name: 'dimensions', title: 'Size', type: 'string', description: 'For example "60 x 80 cm".'}),
@@ -111,6 +120,7 @@ export const painting = defineType({
       by: [
         {field: 'pinned', direction: 'desc'},
         {field: 'date', direction: 'desc'},
+        {field: 'position', direction: 'asc'},
       ],
     },
     {title: 'Title', name: 'titleAsc', by: [{field: 'title', direction: 'asc'}]},

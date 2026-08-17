@@ -1,28 +1,71 @@
-/* Renders painting cards from content/gallery.json and runs the lightbox.
+/* Renders painting cards from Sanity and runs the lightbox.
    Used by both the home page (featured works) and the gallery page.
 
-   The paintings live in a JSON file rather than in this script so that the CMS
-   can edit them. One consequence: the page must be served over http, because a
-   browser refuses to fetch a local file from a page opened with file://. Use
-   the dev server (see README) rather than double-clicking index.html. */
+   Paintings are read live, so whatever Sam saves is on the site as soon as
+   anyone reloads. There is no build step and nothing to wait for.
+
+   The trade-off is that the site now needs Sanity to be reachable. If the
+   request fails the page says so plainly and points at the contact page rather
+   than showing an empty gallery. */
 
 (function () {
   'use strict';
 
-  var BASE = 'images/paintings/';
-  var DATA = 'content/gallery.json';
+  var PROJECT = '3zrcphqr';
+  var DATASET = 'production';
+  // apicdn is the cached read endpoint: faster, and it is the one with the
+  // million-requests-a-month allowance rather than the smaller API one.
+  var API = 'https://' + PROJECT + '.apicdn.sanity.io/v2024-01-01/data/query/' + DATASET;
+
+  var FIELDS =
+    '{"slug":slug.current,title,year,medium,dimensions,series,featured,alt,' +
+    '"url":photo.asset->url,' +
+    '"width":photo.asset->metadata.dimensions.width,' +
+    '"height":photo.asset->metadata.dimensions.height,' +
+    '"lqip":photo.asset->metadata.lqip}';
+
+  // Hidden paintings never leave Sanity. Pinned first, then newest.
+  var PUBLISHED = '*[_type=="painting" && draft != true]|order(pinned desc, date desc, position asc)';
+
+  var QUERIES = {
+    all: PUBLISHED + FIELDS,
+    featured: '*[_type=="painting" && draft != true && featured == true]' +
+              '|order(pinned desc, date desc, position asc)' + FIELDS
+  };
+
+  function query(groq) {
+    return fetch(API + '?query=' + encodeURIComponent(groq))
+      .then(function (r) {
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        return r.json();
+      })
+      .then(function (body) { return body.result || []; });
+  }
+
+  /* Sanity resizes on request, so a width is just a query parameter. No
+     pre-generated files, and every size is produced from the original. */
+  function imageUrl(p, width, format) {
+    return p.url + '?w=' + width + '&q=80&auto=format' +
+      (format ? '&fm=' + format : '');
+  }
+
+  var STEPS = [400, 800, 1200, 1600, 2000];
+
+  function widthsFor(p) {
+    // Never ask for more than the photograph actually has, or Sanity upscales.
+    var usable = STEPS.filter(function (w) { return w <= p.width; });
+    if (!usable.length || usable[usable.length - 1] < p.width) usable.push(p.width);
+    return usable;
+  }
 
   function srcset(p, ext) {
-    return p.widths
-      .map(function (w) {
-        return BASE + p.slug + '/' + p.slug + '-' + w + '.' + ext + ' ' + w + 'w';
-      })
+    return widthsFor(p)
+      .map(function (w) { return imageUrl(p, w, ext) + ' ' + w + 'w'; })
       .join(', ');
   }
 
   function fallbackSrc(p) {
-    var w = p.widths[Math.min(1, p.widths.length - 1)];
-    return BASE + p.slug + '/' + p.slug + '-' + w + '.jpg';
+    return imageUrl(p, Math.min(800, p.width), null);
   }
 
   function subtitle(p) {
@@ -38,20 +81,19 @@
   function buildPicture(p, sizes, eager) {
     var picture = document.createElement('picture');
 
-    var webp = document.createElement('source');
-    webp.type = 'image/webp';
-    webp.srcset = srcset(p, 'webp');
-    webp.sizes = sizes;
-    picture.appendChild(webp);
-
     var img = document.createElement('img');
     img.src = fallbackSrc(p);
-    img.srcset = srcset(p, 'jpg');
+    img.srcset = srcset(p, null);
     img.sizes = sizes;
-    img.alt = p.alt;
+    img.alt = p.alt || p.title;
     img.width = p.width;
     img.height = p.height;
     img.decoding = 'async';
+    if (p.lqip) {
+      // A tiny blurred version of the painting, inlined by Sanity, so there is
+      // never a blank rectangle waiting for the real file.
+      img.style.background = 'url(' + p.lqip + ') center / cover no-repeat';
+    }
 
     if (eager) {
       img.loading = 'eager';
@@ -249,7 +291,7 @@
       'The paintings could not be loaded just now. Please refresh, or ' +
       '<a class="link" href="contact.html">get in touch</a> and Sam will gladly send images of the current work.';
     grid.parentNode.insertBefore(p, grid.nextSibling);
-    if (window.console) console.error('Could not load ' + DATA + ':', reason);
+    if (window.console) console.error('Could not load paintings from Sanity:', reason);
   }
 
   /* How many cards to add each time. Drawing several hundred at once is slow
@@ -387,18 +429,13 @@
     var grid = document.querySelector('[data-gallery]');
     if (!grid) return;
 
-    // The home page reads a much smaller file holding only the paintings it
-    // shows, so it does not download the whole collection to display six.
-    DATA = grid.dataset.src || DATA;
+    // The home page asks only for the works it shows, rather than filtering a
+    // full download down to six.
+    var groq = grid.dataset.gallery === 'featured' ? QUERIES.featured : QUERIES.all;
 
-    fetch(DATA, { cache: 'no-cache' })
-      .then(function (response) {
-        if (!response.ok) throw new Error('HTTP ' + response.status);
-        return response.json();
-      })
-      .then(function (data) {
-        var paintings = (data && data.paintings) || [];
-        if (!paintings.length) throw new Error('no paintings in ' + DATA);
+    query(groq)
+      .then(function (paintings) {
+        if (!paintings.length) throw new Error('no paintings returned');
         render(grid, paintings);
       })
       .catch(function (error) {
