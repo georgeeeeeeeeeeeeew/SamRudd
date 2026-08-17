@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Paintings | Sam Rudd</title>
+<meta name="description" content="The full collection of paintings by Sam Rudd: contemporary landscapes of the British coast and countryside.">
+<link rel="canonical" href="https://samrudd.moveconsultingpartners.com/paintings.html">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Sam Rudd">
+<meta property="og:title" content="Paintings | Sam Rudd">
+<meta property="og:description" content="The full collection of paintings by Sam Rudd.">
+<meta property="og:url" content="https://samrudd.moveconsultingpartners.com/paintings.html">
+<meta property="og:image" content="https://samrudd.moveconsultingpartners.com/images/site/og-default.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="en_GB">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" href="favicon/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="favicon/apple-touch-icon.png">
+<link rel="manifest" href="favicon/site.webmanifest">
+<meta name="theme-color" content="#faf6f1">
+
+<link rel="preload" href="fonts/fraunces-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="shell">
+    <a class="wordmark" href="index.html">
+      <img src="images/site/logo-signature.png" alt="Sam Rudd, painter"
+           width="371" height="163" fetchpriority="high">
+    </a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Menu">
+      <span></span><span></span>
+    </button>
+    <nav class="site-nav" id="site-nav" aria-label="Main">
+      <ul class="nav-list">
+        <li><a href="paintings.html" aria-current="page">Paintings</a></li>
+        <li><a href="exhibitions.html">Exhibitions</a></li>
+        <li><a href="courses.html">Courses</a></li>
+        <li><a href="studio.html">Studio</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+  <section class="page-head shell">
+    <span class="eyebrow">Gallery</span>
+    <h1>Paintings</h1>
+    <p class="lede">A selection of paintings inspired by the British coast, countryside and landscape.</p>
+  </section>
+
+  <section class="shell" style="padding-bottom: var(--section-y)" aria-label="All paintings">
+    <ul class="gallery-grid" data-gallery="all"></ul>
+    <noscript>
+      <p class="lede" style="margin-top: var(--space-4)">
+        The gallery needs JavaScript to display. Please
+        <a class="link" href="contact.html">get in touch</a> and Sam will gladly send images of the current work.
+      </p>
+    </noscript>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="shell">
+    <div class="site-footer__top">
+      <div>
+        <img class="site-footer__lockup" src="images/site/logo-lockup.png"
+             alt="" width="516" height="237" loading="lazy" decoding="async">
+        <h2>Enquiries welcome</h2>
+        <p class="site-footer__note">For exhibition, press and other professional enquiries, please get in touch.</p>
+        <p style="margin-top: var(--space-3)"><a class="link-arrow" href="contact.html">Contact Sam</a></p>
+      </div>
+      <nav aria-label="Footer">
+        <ul class="footer-links">
+          <li><a href="paintings.html">Paintings</a></li>
+          <li><a href="exhibitions.html">Exhibitions</a></li>
+          <li><a href="courses.html">Courses</a></li>
+          <li><a href="studio.html">Studio</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="site-footer__base">
+      <p>© <span id="year">2026</span> Sam Rudd. All rights reserved.</p>
+      <p>Contemporary British landscape painter</p>
+    </div>
+  </div>
+</footer>
+
+<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+<script src="js/gallery.js"></script>
+<script src="js/main.js" defer></script>
+
+<!-- Structured data for each painting, so the work can surface in image search.
+     Year and medium are omitted where they are not yet known, rather than
+     published as empty strings. -->
+<script>
+(function () {
+  fetch('content/gallery.json', { cache: 'no-cache' })
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (data) {
+      if (!data || !data.paintings) return;
+      var graph = data.paintings.map(function (p) {
+        var largest = p.widths[p.widths.length - 1];
+        var node = {
+          "@type": "VisualArtwork",
+          "name": p.title,
+          "artform": "Painting",
+          "creator": { "@type": "Person", "name": "Sam Rudd" },
+          "image": "https://samrudd.moveconsultingpartners.com/images/paintings/" + p.slug + "/" + p.slug + "-" + largest + ".jpg",
+          "url": "https://samrudd.moveconsultingpartners.com/paintings.html#painting=" + p.slug
+        };
+        if (p.medium) node.artMedium = p.medium;
+        if (p.year) node.dateCreated = String(p.year);
+        return node;
+      });
+      var tag = document.createElement('script');
+      tag.type = 'application/ld+json';
+      tag.textContent = JSON.stringify({ "@context": "https://schema.org", "@graph": graph });
+      document.head.appendChild(tag);
+    })
+    .catch(function () { /* structured data is a bonus; never break the page for it */ });
+})();
+</script>
+</body>
+</html>

@@ -270,7 +270,7 @@
       if (card) lightbox.open(Number(card.dataset.index), card);
     });
 
-    // Shared links like gallery.html#painting=blue-boats open that work directly.
+    // Shared links like paintings.html#painting=blue-boats open that work directly.
     var match = /#painting=([\w-]+)/.exec(location.hash);
     if (match) {
       var index = items.findIndex(function (p) { return p.slug === match[1]; });

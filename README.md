@@ -147,7 +147,7 @@ to name the problem rather than fail silently.
 ## Layout of the files
 
 ```
-index.html  gallery.html  about.html  contact.html  404.html
+index.html  paintings.html  about.html  contact.html  404.html
 .pages.yml                  what Sam sees in the CMS, labels, help text, fields
 GUIDE-FOR-SAM.md            her instructions, in plain English
 content/paintings.json      SOURCE: what Sam edits

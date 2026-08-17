@@ -20,7 +20,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-TARGETS = ["index.html", "gallery.html", "about.html", "contact.html",
+TARGETS = ["index.html", "paintings.html", "about.html", "contact.html",
            "404.html", "sitemap.xml", "robots.txt"]
 
 # Any absolute URL pointing at the site, whatever domain it currently names.

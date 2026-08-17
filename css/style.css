@@ -433,7 +433,9 @@ a {
   transform: translateY(-3.5px) rotate(-45deg);
 }
 
-@media (max-width: 42rem) {
+/* Six nav items need more width than four did, so the menu collapses to the
+   button earlier than the rest of the layout changes. */
+@media (max-width: 52rem) {
   .nav-toggle {
     display: block;
   }
