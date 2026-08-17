@@ -24,13 +24,15 @@
     '"height":photo.asset->metadata.dimensions.height,' +
     '"lqip":photo.asset->metadata.lqip}';
 
-  // Hidden paintings never leave Sanity. Pinned first, then newest.
-  var PUBLISHED = '*[_type=="painting" && draft != true]|order(pinned desc, date desc, position asc)';
+  /* Hidden paintings never leave Sanity. orderRank is the drag order set in
+     the studio: a lexicographic key, so ordering by it as a plain string is
+     correct and needs no secondary sort. */
+  var PUBLISHED = '*[_type=="painting" && draft != true]|order(orderRank)';
 
   var QUERIES = {
     all: PUBLISHED + FIELDS,
     featured: '*[_type=="painting" && draft != true && featured == true]' +
-              '|order(pinned desc, date desc, position asc)' + FIELDS
+              '|order(orderRank)' + FIELDS
   };
 
   /* Delegates to content.js so the gallery goes through the same path as

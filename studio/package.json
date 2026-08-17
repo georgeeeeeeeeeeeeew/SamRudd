@@ -10,6 +10,7 @@
     "deploy": "sanity deploy"
   },
   "dependencies": {
+    "@sanity/orderable-document-list": "^1.5.1",
     "@sanity/vision": "^3",
     "react": "^18",
     "react-dom": "^18",

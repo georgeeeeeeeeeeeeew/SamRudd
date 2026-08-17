@@ -67,11 +67,8 @@ There's a search box at the top, and you can sort by date or by name.
 
    **Web address name**: click **Generate** and it makes one from the title.
 
-   **Date**: this decides where the painting sits in the gallery, newest first.
-   The first of the month is fine if you're unsure.
-
-   **Keep at the top**: holds this painting at the front of the gallery whatever
-   its date. Good for leading with a favourite.
+   **Date**: when it was painted. Shown alongside the painting. The order in
+   the gallery is set by dragging, not by this.
 
    **Hide for now**: keeps a painting off the website while you're still working
    on it, so you can save half-finished and come back.
@@ -94,12 +91,11 @@ not appearing on the site, that is almost always why.
 
 ## Changing the order
 
-The gallery sorts itself: newest date first. So the usual way to move a painting
-is to correct its **Date**.
+Open **Paintings** and drag them into whatever order you want. The gallery on the
+website shows them in exactly that order, and it saves as you drop.
 
-To make one lead the gallery regardless of when it was painted, tick **Keep at
-the top**. You can do that to several, and they will sit at the front in date
-order.
+The **Date** on a painting is just information shown alongside it. It no longer
+decides where anything appears.
 
 ---
 

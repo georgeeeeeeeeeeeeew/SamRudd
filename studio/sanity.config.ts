@@ -2,6 +2,7 @@ import {defineConfig} from 'sanity'
 import {structureTool} from 'sanity/structure'
 import {presentationTool} from 'sanity/presentation'
 import {visionTool} from '@sanity/vision'
+import {orderableDocumentListDeskItem} from '@sanity/orderable-document-list'
 import {schemaTypes} from './schemaTypes'
 
 /* Where the Preview tab points. The site reads published content live, so the
@@ -30,11 +31,19 @@ export default defineConfig({
     structureTool({
       // The sidebar is grouped the way the website is, so Sam is looking for
       // "the About page" rather than for a document type.
-      structure: (S) =>
+      structure: (S, context) =>
         S.list()
           .title('Website')
           .items([
-            S.documentTypeListItem('painting').title('Paintings'),
+            /* Drag-to-reorder. This replaces sorting the gallery by date with a
+               pin for favourites, which was only ever a way of expressing an
+               order without being able to drag one. */
+            orderableDocumentListDeskItem({
+              type: 'painting',
+              title: 'Paintings',
+              S,
+              context,
+            }),
             S.documentTypeListItem('exhibition').title('Exhibitions'),
             S.documentTypeListItem('course').title('Courses'),
             S.divider(),

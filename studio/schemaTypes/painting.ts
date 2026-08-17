@@ -1,4 +1,5 @@
 import {defineField, defineType} from 'sanity'
+import {orderRankField, orderRankOrdering} from '@sanity/orderable-document-list'
 
 /**
  * A painting.
@@ -64,15 +65,8 @@ export const painting = defineType({
       type: 'date',
       options: {dateFormat: 'D MMMM YYYY'},
       description:
-        'Orders the gallery, newest first. The first of the month is fine if you are unsure.',
-    }),
-
-    defineField({
-      name: 'pinned',
-      title: 'Keep at the top',
-      type: 'boolean',
-      initialValue: false,
-      description: 'Holds this painting at the front of the gallery whatever its date.',
+        'When it was painted. Shown on the painting, and useful for sorting the ' +
+        'list here. The order on the website is set by dragging, not by this.',
     }),
 
     defineField({
@@ -99,14 +93,8 @@ export const painting = defineType({
       description: 'Visitors use this to filter the gallery, so it is worth setting.',
     }),
 
-    defineField({
-      name: 'position',
-      title: 'Manual order',
-      type: 'number',
-      hidden: true,
-      description:
-        'Only breaks ties between paintings with no date. Nothing to set by hand.',
-    }),
+    // Written by dragging in the Paintings list. Never edited by hand.
+    orderRankField({type: 'painting'}),
 
     defineField({name: 'year', title: 'Year', type: 'string'}),
     defineField({name: 'medium', title: 'Medium', type: 'string', description: 'For example "Oil on canvas".'}),
@@ -114,15 +102,8 @@ export const painting = defineType({
   ],
 
   orderings: [
-    {
-      title: 'Newest first',
-      name: 'dateDesc',
-      by: [
-        {field: 'pinned', direction: 'desc'},
-        {field: 'date', direction: 'desc'},
-        {field: 'position', direction: 'asc'},
-      ],
-    },
+    orderRankOrdering,
+    {title: 'Newest first', name: 'dateDesc', by: [{field: 'date', direction: 'desc'}]},
     {title: 'Title', name: 'titleAsc', by: [{field: 'title', direction: 'asc'}]},
   ],
 
@@ -140,7 +121,7 @@ export const painting = defineType({
     prepare({title, date, series, draft, media}) {
       const bits = [
         draft ? 'Hidden' : null,
-        date ? new Date(date).getFullYear() : 'No date',
+        date ? new Date(date).getFullYear() : null,
         series || null,
       ].filter(Boolean)
       return {title, subtitle: bits.join(' · '), media}
